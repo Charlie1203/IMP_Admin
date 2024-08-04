@@ -1,0 +1,22 @@
+body {
+  background: rgb(226, 221, 221);
+  font-family: "Trebuchet MS (sans-serif);";
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+input {
+  border-radius: 5px;
+}
+
+button {
+  border-radius: 5px;
+  font-weight: 600;
+
+  background: rgb(226, 182, 115);
+}
+
+button:hover {
+  background: rgb(255, 153, 0);
+  transition-duration: 0.5s;
+}
