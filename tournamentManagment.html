@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Page</title>
+  </head>
+  <body>
+    <link rel="stylesheet" href="styles.css" />
+    <div>
+      <div class="label">
+        <h1>Tournament Managment</h1>
+      </div>
+      <div>
+        <label>Tournament Name: </label>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+      import { firebaseConfig } from "./firebaseConfig.js";
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Make auth and db available globally
+      window.auth = auth;
+      window.db = db;
+    </script>
+
+    <!-- Custom JS -->
+    <script type="module" src="players.js"></script>
+    <script type="module" src="index.js"></script>
+  </body>
+</html>

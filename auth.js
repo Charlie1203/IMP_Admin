@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Signed in
         const user = userCredential.user;
         console.log("User logged in:", user);
+        window.location.href = "home.html";
       })
       .catch((error) => {
         console.error("Login error:", error);

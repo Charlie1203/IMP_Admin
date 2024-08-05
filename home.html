@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Page</title>
+  </head>
+  <body>
+    <h1>Admin Page</h1>
+    <button id="startNewTournament">Start a New Tournament</button>
+    <button id="manageTournament">Manage Tournament</button>
+
+    <script>
+      document
+        .getElementById("startNewTournament")
+        .addEventListener("click", () => {
+          window.location.href = "admin.html"; // Redirect to the page for starting a new tournament
+        });
+
+      document
+        .getElementById("manageTournament")
+        .addEventListener("click", () => {
+          window.location.href = "admin.html";
+        });
+
+      document
+        .getElementById("manageTournament")
+        .addEventListener("click", () => {
+          window.location.href = "tournamentManagment.html";
+        });
+    </script>
+  </body>
+</html>

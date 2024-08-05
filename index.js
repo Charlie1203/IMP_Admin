@@ -7,7 +7,6 @@ import {
   collection,
   writeBatch,
 } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-import { getPlayers } from "./players.js"; // Assuming getPlayers is exported from players.js
 import { v4 as uuidv4 } from "https://jspm.dev/uuid"; // Import UUID function
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -19,13 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const startDate = document.getElementById("startDate").value;
       const endDate = document.getElementById("endDate").value;
       const urlImage = document.getElementById("urlImage").value;
+      const activo = document.getElementById("activo").value;
 
       if (
         !tournamentName ||
         !tournamentID ||
         !startDate ||
         !endDate ||
-        !urlImage
+        !urlImage ||
+        !activo
       ) {
         alert("All fields are required!");
         return;
@@ -35,7 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
         name: tournamentName,
         start_date: startDate,
         finish_date: endDate,
-        urlImage: urlImage,
+        logo: urlImage,
+        activo: activo,
       };
 
       try {
@@ -79,12 +81,33 @@ document.addEventListener("DOMContentLoaded", function () {
             batch.set(matchRef, matchData);
           }
         };
+        const createResults = (collectionName, numberOfDocuments) => {
+          for (let i = 1; i <= numberOfDocuments; i++) {
+            const matchId = `Match${i}`;
+            const docRef = doc(
+              collection(db, "I_Torneos", tournamentID, collectionName),
+              matchId
+            );
+
+            const matchData = {
+              id_player: "",
+              name: "",
+            };
+
+            batch.set(docRef, matchData);
+          }
+        };
 
         // Create matches for different stages
         createMatches("I_Cuartos", 8);
         createMatches("I_Semifinales", 4);
         createMatches("I_Finales", 2);
         createMatches("I_TercerPuesto", 2);
+
+        createResults("I_Cuartos_Resultados", 4);
+        createResults("I_Semis_Resultados", 2);
+        createResults("I_Finales_Resultados", 1);
+        createResults("I_TercerCuarto_Resultados", 1);
 
         await batch.commit();
         console.log("Players and matches added to the tournament");
