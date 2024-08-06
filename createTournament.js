@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from "https://jspm.dev/uuid"; // Import UUID function
 
 document.addEventListener("DOMContentLoaded", function () {
   const createTournamentButton = document.getElementById("createTournament");
-
   if (createTournamentButton) {
     createTournamentButton.addEventListener("click", async () => {
       const tournamentName = document.getElementById("tournamentName").value;
@@ -121,28 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error adding document: ", e);
       }
     });
+  } else {
+    console.log("createTournamentButton not found");
   }
-
-  document.getElementById("I_Cuartos").addEventListener("click", async () => {
-    return;
-  });
-
-  const displayActiveTournamentName = async () => {
-    console.log("Inside displayActiveTournamentName");
-    const db = window.db;
-    const q = query(collection(db, "I_Torneos"), where("activo", "==", 1));
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      const activeTournament = querySnapshot.docs[0].data();
-      document.getElementById("tournamentName").innerText =
-        activeTournament.name;
-    } else {
-      document.getElementById("tournamentName").innerText =
-        "No active tournament found";
-    }
-  };
-
-  // Display the active tournament name when the page loads
-  displayActiveTournamentName();
 });
