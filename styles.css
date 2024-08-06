@@ -1,26 +1,46 @@
 body {
-  background: rgb(226, 221, 221);
-  font-family: "Trebuchet MS (sans-serif);";
-  font-size: 1.2rem;
-  font-weight: 600;
+	background: rgb(226, 221, 221);
+	font-family: "Trebuchet MS (sans-serif);";
+	font-size: 1.2rem;
+	font-weight: 600;
 }
 
 input {
-  border-radius: 5px;
+	border-radius: 5px;
 }
 
 button {
-  border-radius: 5px;
-  font-weight: 600;
+	border-radius: 5px;
+	font-weight: 600;
 
-  background: rgb(226, 182, 115);
+	background: rgb(226, 182, 115);
 }
 
 button:hover {
-  background: rgb(255, 153, 0);
-  transition-duration: 0.5s;
+	background: rgb(255, 153, 0);
+	transition-duration: 0.5s;
 }
 
 label {
-  font-weight: 600;
+	font-weight: 600;
+}
+
+.modalCont {
+	height: 100vh;
+	width: 100vw;
+	background-color: rgba(0, 0, 0, 0.705);
+	position: absolute;
+	top: 0;
+	display: none;
+}
+
+.modalBox {
+	background: white;
+	width: 80%;
+	height: 80%;
+	position: absolute;
+	top: 10%;
+	border-radius: 2em;
+	left: 10%;
+	padding: 2em;
 }
