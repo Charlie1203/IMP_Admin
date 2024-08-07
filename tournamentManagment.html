@@ -27,7 +27,9 @@
 							Cargar jugadores a Cuartos
 						</button>
 
-						<button id="handleGames">Manejar partidos</button>
+						<button onclick="handleModal('brackets')" id="handleGames">
+							Manejar partidos
+						</button>
 					</div>
 				</div>
 				<div class="col-12 col-lg-2"></div>
@@ -103,6 +105,48 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- MODAL BRACKETS -->
+		<div class="container-fluid modalCont" id="brackets">
+			<div class="row modalBox">
+				<div class="col-12 text-center">
+					<h1 class="mt-5">Selecciona la bracket</h1>
+				</div>
+				<div class="col-12 text-center">
+					<button id="cuartos" class="w-50 mt-0">Cuartos de final</button>
+				</div>
+				<div class="col-12 text-center">
+					<button class="w-50 mt-0">Semifinales</button>
+				</div>
+
+				<div class="col-12 text-center">
+					<button class="w-50 mt-0">Final Perdedores</button>
+				</div>
+
+				<div class="col-12 text-center">
+					<button class="w-50 mt-0">Final Ganadores</button>
+				</div>
+
+				<div class="col-12 text-center">
+					<button id="cuartos_finishButton" class="w-25 mt-4">
+						Cargar Jugadores
+					</button>
+					<button
+						onclick="handleModal('brackets')"
+						id="closeButton"
+						class="w-25 mt-4"
+					>
+						Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			document.getElementById("cuartos").addEventListener("click", () => {
+				window.location.href = "quarterFinals.html"; // Redirect to the page for starting a new tournament
+			});
+		</script>
 
 		<script>
 			let handleModal = (id) => {
