@@ -1,5 +1,4 @@
 // index.js
-
 import {
   doc,
   setDoc,
