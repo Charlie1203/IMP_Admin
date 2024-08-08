@@ -19,31 +19,59 @@
         <div class="col-lg-6 col-12 text-center">
           <h1 class="mt-4">Cuartos de final</h1>
           <button
-            onclick="handleModal('modal_1')"
+            onclick="handleModal('modal', 1)"
             id="player_1"
             class="btn btn-primary mt-3 w-50"
           >
             Player 1
           </button>
-          <button id="player_2" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 2)"
+            id="player_2"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 2
           </button>
-          <button id="player_3" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 3)"
+            id="player_3"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 3
           </button>
-          <button id="player_4" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 4)"
+            id="player_4"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 4
           </button>
-          <button id="player_5" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 5)"
+            id="player_5"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 5
           </button>
-          <button id="player_6" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 6)"
+            id="player_6"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 6
           </button>
-          <button id="player_7" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 7)"
+            id="player_7"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 7
           </button>
-          <button id="player_8" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 8)"
+            id="player_8"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 8
           </button>
         </div>
@@ -51,8 +79,8 @@
       </div>
     </div>
 
-    <!-- MODAL PLAYER 1 -->
-    <div class="container-fluid modalCont" id="modal_1">
+    <!-- MODAL ALL PLAYERS -->
+    <div class="container-fluid modalCont" id="modal">
       <div class="row modalBox">
         <div class="col-12 text-center">Player 1</div>
         <div class="col-4">
@@ -246,7 +274,7 @@
             Cargar Score
           </button>
           <button
-            onclick="handleModal('modal_1')"
+            onclick="handleModal('modal')"
             id="closeButton"
             class="w-25 mt-4"
           >
@@ -257,7 +285,7 @@
     </div>
 
     <script>
-      let handleModal = (id) => {
+      let handleModal = (id, number) => {
         let modal = document.getElementById(id);
         if (modal.style.display === "none") {
           modal.style.display = "block";

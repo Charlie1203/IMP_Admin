@@ -21,19 +21,31 @@
         <div class="col-lg-6 col-12 text-center">
           <h1 class="mt-4">Semifinales</h1>
           <button
-            onclick="handleModal('modal_1')"
+            onclick="handleModal('modal')"
             id="player_1"
             class="btn btn-primary mt-3 w-50"
           >
             Player 1
           </button>
-          <button id="player_2" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal')"
+            id="player_2"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 2
           </button>
-          <button id="player_3" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal')"
+            id="player_3"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 3
           </button>
-          <button id="player_4" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal')"
+            id="player_4"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 4
           </button>
         </div>
@@ -41,8 +53,8 @@
       </div>
     </div>
 
-    <!-- MODAL PLAYER 1 -->
-    <div class="container-fluid modalCont" id="modal_1">
+    <!-- MODAL ALL PLAYERS -->
+    <div class="container-fluid modalCont" id="modal">
       <div class="row modalBox">
         <div class="col-12 text-center">Player 1</div>
         <div class="col-4">
@@ -236,7 +248,7 @@
             Cargar Score
           </button>
           <button
-            onclick="handleModal('modal_1')"
+            onclick="handleModal('modal')"
             id="closeButton"
             class="w-25 mt-4"
           >

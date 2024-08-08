@@ -41,10 +41,8 @@ async function fetchAndPopulatePlayers() {
     console.log("Called from quarterFinals.html");
     collectionName = "I_Cuartos";
   } else if (path.includes("semiFinals.html")) {
-    console.log("Called from semiFinals.html");
     collectionName = "I_Semifinales";
   } else if (path.includes("finales.html")) {
-    console.log("Called from finales.html");
     collectionName = "I_Finales";
   } else {
     // TODO FIX CORRECT HTML FILE NAMES FOR THIS, FINAL ELSE SHOULD CATCH EDGE CASE
