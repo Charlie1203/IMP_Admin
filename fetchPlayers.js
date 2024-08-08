@@ -32,23 +32,47 @@ document.addEventListener("DOMContentLoaded", function () {
   fetchAndPopulatePlayers();
 });
 async function fetchAndPopulatePlayers() {
-  console.log("HOLA");
   const tournamentId = await getActiveTournamentId();
   const db = window.db;
-  const cuartosRef = collection(db, "I_Torneos", tournamentId, "I_Cuartos");
+  let collectionName;
+
+  const path = document.location.pathname;
+  if (path.includes("quarterFinals.html")) {
+    console.log("Called from quarterFinals.html");
+    collectionName = "I_Cuartos";
+  } else if (path.includes("semiFinals.html")) {
+    console.log("Called from semiFinals.html");
+    collectionName = "I_Semifinales";
+  } else if (path.includes("finales.html")) {
+    console.log("Called from finales.html");
+    collectionName = "I_Finales";
+  } else {
+    // TODO FIX CORRECT HTML FILE NAMES FOR THIS, FINAL ELSE SHOULD CATCH EDGE CASE
+    collectionName = "I_TercerCuarto";
+  }
+
+  const cuartosRef = collection(db, "I_Torneos", tournamentId, collectionName);
   const cuartosSnapshot = await getDocs(cuartosRef);
 
   if (!cuartosSnapshot.empty) {
     const playerDocs = cuartosSnapshot.docs.map((doc) => doc.data());
     playerDocs.sort((a, b) => a.order - b.order);
     const playerNames = playerDocs.map((doc) => doc.name);
-    if (playerNames.length === 8) {
+    if (playerNames.length <= 8 || playerNames.length >= 2) {
+      for (let i = 0; i < playerNames.length; i++) {
+        // If any player is set to be an empty string, then the bracket is not ready
+        if (playerNames[i] == "") {
+          return;
+        }
+      }
       populatePlayerButtons(playerNames);
     } else {
-      console.error("Expected 8 players, but found a different number.");
+      console.error(
+        "Expected Between 2 and 8 players, but found a different number."
+      );
     }
   } else {
-    console.error("No players found in the I_Cuartos collection.");
+    console.error("No players found in the ", collectionName, " collection.");
   }
 }
 

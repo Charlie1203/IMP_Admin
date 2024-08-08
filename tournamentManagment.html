@@ -121,11 +121,11 @@
         </div>
 
         <div class="col-12 text-center">
-          <button class="w-50 mt-0">Final Perdedores</button>
+          <button id="tercerCuarto" class="w-50 mt-0">Final Perdedores</button>
         </div>
 
         <div class="col-12 text-center">
-          <button class="w-50 mt-0">Final Ganadores</button>
+          <button id="finales" class="w-50 mt-0">Final Ganadores</button>
         </div>
 
         <div class="col-12 text-center">
@@ -152,6 +152,18 @@
     <script>
       document.getElementById("semis").addEventListener("click", () => {
         window.location.href = "semiFinals.html";
+      });
+    </script>
+
+    <script>
+      document.getElementById("finales").addEventListener("click", () => {
+        window.location.href = "finales.html";
+      });
+    </script>
+
+    <script>
+      document.getElementById("tercerCuarto").addEventListener("click", () => {
+        window.location.href = "tercerCuarto.html";
       });
     </script>
 
