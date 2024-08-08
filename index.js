@@ -122,10 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  document.getElementById("I_Cuartos").addEventListener("click", async () => {
-    return;
-  });
-
   const displayActiveTournamentName = async () => {
     console.log("Inside displayActiveTournamentName");
     const db = window.db;
