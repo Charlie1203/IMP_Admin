@@ -23,7 +23,7 @@ const getActiveTournamentId = async () => {
 };
 
 /**
- * Fetches player names from the "I_Cuartos" collection in Firestore.
+ * Fetches player names from the brakcet collection in Firestore, depending which html is calling this function.
  * Assumes there are 8 documents in the collection, each with a "name" and "order" field.
  *
  * @returns {Promise<string[]>} - A promise that resolves to an array of player names sorted by order.
@@ -49,11 +49,11 @@ async function fetchAndPopulatePlayers() {
     collectionName = "I_TercerCuarto";
   }
 
-  const cuartosRef = collection(db, "I_Torneos", tournamentId, collectionName);
-  const cuartosSnapshot = await getDocs(cuartosRef);
+  const docRef = collection(db, "I_Torneos", tournamentId, collectionName);
+  const docSnapshot = await getDocs(docRef);
 
-  if (!cuartosSnapshot.empty) {
-    const playerDocs = cuartosSnapshot.docs.map((doc) => doc.data());
+  if (!docSnapshot.empty) {
+    const playerDocs = docSnapshot.docs.map((doc) => doc.data());
     playerDocs.sort((a, b) => a.order - b.order);
     const playerNames = playerDocs.map((doc) => doc.name);
     if (playerNames.length <= 8 || playerNames.length >= 2) {

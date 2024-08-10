@@ -21,13 +21,17 @@
         <div class="col-lg-6 col-12 text-center">
           <h1 class="mt-4">Finales</h1>
           <button
-            onclick="handleModal('modal_1')"
+            onclick="handleModal('modal', 1)"
             id="player_1"
             class="btn btn-primary mt-3 w-50"
           >
             Player 1
           </button>
-          <button id="player_2" class="btn btn-primary mt-3 w-50">
+          <button
+            onclick="handleModal('modal', 2)"
+            id="player_2"
+            class="btn btn-primary mt-3 w-50"
+          >
             Player 2
           </button>
         </div>
@@ -36,7 +40,7 @@
     </div>
 
     <!-- MODAL PLAYER 1 -->
-    <div class="container-fluid modalCont" id="modal_1">
+    <div class="container-fluid modalCont" id="modal">
       <div class="row modalBox">
         <div class="col-12 text-center">Player 1</div>
         <div class="col-4">
@@ -241,9 +245,22 @@
     </div>
 
     <script>
-      let handleModal = (id) => {
+      let handleModal = (id, playerNumber) => {
         let modal = document.getElementById(id);
-        if (modal.style.display === "none") {
+
+        let inputs = modal.querySelectorAll("input");
+
+        // Cambia los IDs de los inputs según el jugador seleccionado
+        inputs.forEach((input, index) => {
+          input.id = `h${index + 1}_player${playerNumber}`;
+        });
+
+        // Actualiza el título del modal para reflejar el jugador seleccionado
+        let title = modal.querySelector(".col-12.text-center");
+        title.textContent = `Player ${playerNumber}`;
+
+        // Alterna la visibilidad del modal
+        if (modal.style.display === "none" || modal.style.display === "") {
           modal.style.display = "block";
         } else {
           modal.style.display = "none";
