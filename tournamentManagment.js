@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Find the correct document in I_Cuartos by order
         const cuartosQuery = query(
           collection(db, "I_Torneos", tournamentId, "I_Cuartos"),
-          where("order", "==", i + 1)
+          where("orden", "==", i + 1)
         );
         const cuartosSnapshot = await getDocs(cuartosQuery);
 

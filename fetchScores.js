@@ -24,6 +24,8 @@ const getActiveTournamentId = async () => {
 };
 
 export async function fetchScoresForPlayer(playerNumber, inputs) {
+  console.log("Called with playerNumber", playerNumber);
+
   // Determine the collection based on the HTML page
   let collectionName = determineCollectionName();
   const tournamentId = await getActiveTournamentId();
@@ -52,10 +54,11 @@ export async function fetchScoresForPlayer(playerNumber, inputs) {
 
       // Populate the input fields with the scores
       inputs.forEach((input, index) => {
-        const holeNumber = index + 1; // Hole numbers H1, H2, ... H18
-        input.value = data[`H${holeNumber}`] || ""; // Set input value or empty string if not present
+        const holeNumber = (index + 1).toString().padStart(2, "0"); // Hole numbers H01, H02, ... H18
+        input.value = data[`H${holeNumber}`] ?? ""; // Set input value or empty string if not present
       });
     } else {
+      console.log(playerNumber);
       console.error("Player not found with the specified orden");
     }
   } else {
@@ -68,7 +71,7 @@ function determineCollectionName() {
 
   if (path.includes("quarterFinals.html")) {
     return "I_Cuartos";
-  } else if (path.includes("semiFinales.html")) {
+  } else if (path.includes("semiFinals.html")) {
     return "I_Semifinales";
   } else if (path.includes("finales.html")) {
     return "I_Finales";

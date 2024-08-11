@@ -258,7 +258,27 @@
       </div>
     </div>
 
-    <script>
+    <script type="module" src="players.js"></script>
+    <script type="module" src="tournamentManagment.js"></script>
+    <script type="module" src="fetchPlayers.js"></script>
+    <script type="module" src="fetchScores.js"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+      import { firebaseConfig } from "./firebaseConfig.js";
+      import { fetchScoresForPlayer } from "./fetchScores.js";
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Make auth and db available globally
+      window.auth = auth;
+      window.db = db;
+
       let handleModal = (id, playerNumber) => {
         let modal = document.getElementById(id);
         let inputs = modal.querySelectorAll("input");
@@ -272,6 +292,8 @@
         let title = modal.querySelector(".col-12.text-center");
         title.textContent = `Player ${playerNumber}`;
 
+        fetchScoresForPlayer(playerNumber, inputs);
+
         // Alterna la visibilidad del modal
         if (modal.style.display === "none" || modal.style.display === "") {
           modal.style.display = "block";
@@ -279,22 +301,14 @@
           modal.style.display = "none";
         }
       };
+      window.handleModal = handleModal;
     </script>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-      import { firebaseConfig } from "./firebaseConfig.js";
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // Make auth and db available globally
-      window.auth = auth;
-      window.db = db;
+    <script>
+      function handleModal(id, playerNumber) {
+        // This function will call the actual implementation
+        window.handleModal(id, playerNumber);
+      }
     </script>
 
     <script
@@ -307,8 +321,5 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
-    <script type="module" src="players.js"></script>
-    <script type="module" src="tournamentManagment.js"></script>
-    <script type="module" src="fetchPlayers.js"></script>
   </body>
 </html>

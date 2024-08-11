@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const matchRef = doc(
               collection(db, "I_Torneos", tournamentID, collectionName)
             );
-            const matchData = { order: i };
+            const matchData = { orden: i };
             for (let j = 1; j <= 18; j++) {
               const holeNumber = j.toString().padStart(2, "0"); // Format number with leading zero
               matchData[`H${holeNumber}`] = 0;

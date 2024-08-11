@@ -24,9 +24,9 @@ const getActiveTournamentId = async () => {
 
 /**
  * Fetches player names from the brakcet collection in Firestore, depending which html is calling this function.
- * Assumes there are 8 documents in the collection, each with a "name" and "order" field.
+ * Assumes there are 8 documents in the collection, each with a "name" and "orden" field.
  *
- * @returns {Promise<string[]>} - A promise that resolves to an array of player names sorted by order.
+ * @returns {Promise<string[]>} - A promise that resolves to an array of player names sorted by orden.
  */
 document.addEventListener("DOMContentLoaded", function () {
   fetchAndPopulatePlayers();
@@ -44,9 +44,11 @@ async function fetchAndPopulatePlayers() {
     collectionName = "I_Semifinales";
   } else if (path.includes("finales.html")) {
     collectionName = "I_Finales";
-  } else {
-    // TODO FIX CORRECT HTML FILE NAMES FOR THIS, FINAL ELSE SHOULD CATCH EDGE CASE
+  } else if (path.includes("tercerCuarto.html")) {
     collectionName = "I_TercerCuarto";
+  } else {
+    console.error("Could not determine collection name");
+    return;
   }
 
   const docRef = collection(db, "I_Torneos", tournamentId, collectionName);
@@ -54,7 +56,7 @@ async function fetchAndPopulatePlayers() {
 
   if (!docSnapshot.empty) {
     const playerDocs = docSnapshot.docs.map((doc) => doc.data());
-    playerDocs.sort((a, b) => a.order - b.order);
+    playerDocs.sort((a, b) => a.orden - b.orden);
     const playerNames = playerDocs.map((doc) => doc.name);
     if (playerNames.length <= 8 || playerNames.length >= 2) {
       for (let i = 0; i < playerNames.length; i++) {
