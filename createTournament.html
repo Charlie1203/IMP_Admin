@@ -1,74 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Firebase Admin</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-3 col-12"></div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Firebase Admin</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="styles.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-12"></div>
 
-        <div class="col-lg-6 col-12">
-          <h1 class="mt-4">Firebase Admin</h1>
-          <div class="form-group mt-2">
-            <label for="tournamentName">Tournament Name:</label>
-            <input type="text" class="form-control" id="tournamentName" />
-          </div>
-          <div class="form-group mt-2">
-            <label for="tournamentID">Tournament ID:</label>
-            <input type="text" class="form-control" id="tournamentID" />
-          </div>
-          <div class="form-group mt-2">
-            <label for="startDate">Starting Date:</label>
-            <input type="text" class="form-control" id="startDate" />
-          </div>
-          <div class="form-group mt-2">
-            <label for="endDate">Finish Date:</label>
-            <input type="text" class="form-control" id="endDate" />
-          </div>
-          <div class="form-group mt-2">
-            <label for="urlImage">URL-Image:</label>
-            <input type="text" class="form-control" id="urlImage" />
-          </div>
-          <div class="form-group mt-2">
-            <label for="activo">activo?:</label>
-            <input type="text" class="form-control" id="activo" />
-          </div>
-          <button class="btn btn-primary mt-4" id="createTournament">
-            Create Tournament
-          </button>
-        </div>
-        <div class="col-lg-3 col-12"></div>
-      </div>
-    </div>
+				<div class="col-lg-6 col-12 box" style="padding: 4%; margin-top: 2%">
+					<h1 style="text-align: center">Firebase Admin</h1>
+					<div class="form-group mt-2">
+						<label for="tournamentName">Tournament Name:</label>
+						<input type="text" class="form-control" id="tournamentName" />
+					</div>
+					<div class="form-group mt-2">
+						<label for="tournamentID">Tournament ID:</label>
+						<input type="text" class="form-control" id="tournamentID" />
+					</div>
+					<div class="form-group mt-2">
+						<label for="startDate">Starting Date:</label>
+						<input type="text" class="form-control" id="startDate" />
+					</div>
+					<div class="form-group mt-2">
+						<label for="endDate">Finish Date:</label>
+						<input type="text" class="form-control" id="endDate" />
+					</div>
+					<div class="form-group mt-2">
+						<label for="urlImage">URL-Image:</label>
+						<input type="text" class="form-control" id="urlImage" />
+					</div>
+					<div class="form-group mt-2">
+						<label for="activo">activo?:</label>
+						<input type="text" class="form-control" id="activo" />
+					</div>
+					<button class="btn btn-primary w-100 mt-4" id="createTournament">
+						Create Tournament
+					</button>
+				</div>
+				<div class="col-lg-3 col-12"></div>
+			</div>
+		</div>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-      import { firebaseConfig } from "./firebaseConfig.js";
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+			import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+			import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+			import { firebaseConfig } from "./firebaseConfig.js";
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
+			// Initialize Firebase
+			const app = initializeApp(firebaseConfig);
+			const auth = getAuth(app);
+			const db = getFirestore(app);
 
-      // Make auth and db available globally
-      window.auth = auth;
-      window.db = db;
-    </script>
+			// Make auth and db available globally
+			window.auth = auth;
+			window.db = db;
+		</script>
 
-    <!-- Custom JS -->
-    <script type="module" src="players.js"></script>
-    <script type="module" src="createTournament.js"></script>
-  </body>
+		<!-- Custom JS -->
+		<script type="module" src="players.js"></script>
+		<script type="module" src="createTournament.js"></script>
+	</body>
 </html>
