@@ -1,3 +1,15 @@
+const getActiveTournamentId = async () => {
+  const db = window.db;
+  const q = query(collection(db, "I_Torneos"), where("activo", "==", 1));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    return querySnapshot.docs[0].id;
+  } else {
+    return;
+  }
+};
+
 export function collectScores() {
   // Selecciona todos los inputs de puntuación
   const inputs = document.querySelectorAll(".score-input");
@@ -12,14 +24,17 @@ export function collectScores() {
   });
 
   let collectionName = determineCollectionName();
+  let tournamentID = getActiveTournamentId();
 
-  storeScores(scores, collectionName);
+  storeScores(scores, tournamentId, collectionName);
   return; // Retorna el objeto con los valores
 }
 
-function storeScores(scores, collectionName) {
-  console.log(scores);
-  console.log(collectionName);
+function storeScores(scores, tournamentId, collectionName) {
+  // chequear que tournament id y collectionname no sean null, si son null return con un  mensaje
+  // guardar en collectionName, los scores. H01, H02, H03, H04, H05, H06, H07, H08, H09, H10, H11, H12, H13, H14, H15, H16, H17, H18 (FIELDS)
+  // POARA ESTO NECESITAS IDENTIFICAR CUAL HOYO ES CUAL EN EL OBJECTO SCORES Y GUARDARLO ACORDE
+  return;
 }
 
 function determineCollectionName() {
