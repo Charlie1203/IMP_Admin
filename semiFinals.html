@@ -48,6 +48,13 @@
           >
             Player 4
           </button>
+          <button
+            onclick="goBack('brackets')"
+            id="g_back"
+            class="btn btn-secondary mt-5 w-50"
+          >
+            Go back
+          </button>
         </div>
         <div class="col-lg-3 col-12"></div>
       </div>
@@ -61,7 +68,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 1:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -71,7 +78,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 2:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -81,7 +88,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 3:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -91,7 +98,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 4:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -101,7 +108,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 5:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -111,7 +118,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 6:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -123,7 +130,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 7:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -133,7 +140,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 8:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -143,7 +150,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 9:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -153,7 +160,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 10:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -163,7 +170,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 11:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -173,7 +180,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 12:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -185,7 +192,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 13:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -195,7 +202,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 14:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -205,7 +212,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 15:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -215,7 +222,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 16:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -225,7 +232,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 17:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -235,7 +242,7 @@
           <div style="display: flex; margin-top: 1em">
             <p class="mx-2">Hoyo 18:</p>
             <input
-              class="w-25"
+              class="w-25 score-input"
               style="height: 2rem"
               type="text"
               name=""
@@ -244,7 +251,11 @@
           </div>
         </div>
         <div class="col-12 text-center">
-          <button id="cuartos_finishButton" class="w-25 mt-4">
+          <button
+            onclick="storeScores()"
+            id="cuartos_finishButton"
+            class="w-25 mt-4"
+          >
             Cargar Score
           </button>
           <button
@@ -258,10 +269,40 @@
       </div>
     </div>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Selecciona todos los inputs de puntuación
+        const inputs = document.querySelectorAll(".score-input");
+        const submitButton = document.getElementById("cuartos_finishButton");
+
+        // Función para verificar si algún input tiene valor
+        function checkInputs() {
+          let hasValue = false;
+          inputs.forEach((input) => {
+            if (input.value.trim() !== "") {
+              hasValue = true;
+            }
+          });
+
+          // Habilita o deshabilita el botón según haya un valor
+          submitButton.disabled = !hasValue;
+        }
+
+        // Agrega un listener a cada input para detectar cambios
+        inputs.forEach((input) => {
+          input.addEventListener("input", checkInputs);
+        });
+
+        // Inicialmente deshabilitar el botón
+        submitButton.disabled = true;
+      });
+    </script>
+
     <script type="module" src="players.js"></script>
     <script type="module" src="tournamentManagment.js"></script>
     <script type="module" src="fetchPlayers.js"></script>
     <script type="module" src="fetchScores.js"></script>
+    <script type="module" src="processScores.js"></script>
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
@@ -269,6 +310,7 @@
       import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
       import { firebaseConfig } from "./firebaseConfig.js";
       import { fetchScoresForPlayer } from "./fetchScores.js";
+      import { collectScores } from "./processScores.js";
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
@@ -302,12 +344,25 @@
         }
       };
       window.handleModal = handleModal;
+
+      let storeScores = () => {
+        collectScores();
+      };
+      window.storeScores = storeScores;
+    </script>
+
+    <script>
+      let goBack = () => {
+        window.location.href = "tournamentManagment.html";
+      };
     </script>
 
     <script>
       function handleModal(id, playerNumber) {
-        // This function will call the actual implementation
         window.handleModal(id, playerNumber);
+      }
+      function storeScores() {
+        window.storeScores();
       }
     </script>
 

@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         createMatches("I_Cuartos", 8);
         createMatches("I_Semifinales", 4);
         createMatches("I_Finales", 2);
-        createMatches("I_TercerPuesto", 2);
+        createMatches("I_TercerCuarto", 2);
 
         createResults("I_Cuartos_Resultados", 4);
         createResults("I_Semis_Resultados", 2);
