@@ -249,6 +249,8 @@
     </div>
 
     <script>
+      let selectedPlayerNumber = null;
+
       document.addEventListener("DOMContentLoaded", function () {
         // Selecciona todos los inputs de puntuación
         const inputs = document.querySelectorAll(".score-input");
@@ -304,6 +306,8 @@
         let modal = document.getElementById(id);
         let inputs = modal.querySelectorAll("input");
 
+        selectedPlayerNumber = playerNumber;
+
         // Cambia los IDs de los inputs según el jugador seleccionado
         inputs.forEach((input, index) => {
           input.id = `h${index + 1}_player${playerNumber}`;
@@ -325,7 +329,11 @@
       window.handleModal = handleModal;
 
       let storeScores = () => {
-        collectScores();
+        if (selectedPlayerNumber !== null) {
+          collectScores(selectedPlayerNumber);
+        } else {
+          console.error("Player number not set.");
+        }
       };
       window.storeScores = storeScores;
     </script>
