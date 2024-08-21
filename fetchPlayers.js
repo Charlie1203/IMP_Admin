@@ -29,7 +29,16 @@ const getActiveTournamentId = async () => {
  * @returns {Promise<string[]>} - A promise that resolves to an array of player names sorted by orden.
  */
 document.addEventListener("DOMContentLoaded", function () {
-  fetchAndPopulatePlayers();
+  const path = document.location.pathname;
+
+  if (
+    path.includes("quarterFinals.html") ||
+    path.includes("semiFinals.html") ||
+    path.includes("finales.html") ||
+    path.includes("tercerCuarto.html")
+  ) {
+    fetchAndPopulatePlayers(); // Only call this function on specified pages
+  }
 });
 async function fetchAndPopulatePlayers() {
   const tournamentId = await getActiveTournamentId();

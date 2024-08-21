@@ -38,7 +38,7 @@ export async function collectScores(playerNumber) {
   let tournamentID = await getActiveTournamentId();
 
   storeScores(scores, tournamentID, collectionName, playerNumber);
-  return; // Retorna el objeto con los valores
+  return;
 }
 
 async function storeScores(scores, tournamentId, collectionName, playerNumber) {
@@ -64,12 +64,7 @@ async function storeScores(scores, tournamentId, collectionName, playerNumber) {
         }
         await updateDoc(docRef, scoreFields);
         console.log("Scores updated successfully.");
-        await processMatches(
-          scores,
-          tournamentId,
-          collectionName,
-          playerNumber
-        );
+        await processMatches(tournamentId, collectionName, playerNumber);
         return;
       } else {
         console.log("No document found with the given player number.");
@@ -82,12 +77,7 @@ async function storeScores(scores, tournamentId, collectionName, playerNumber) {
   }
 }
 
-async function processMatches(
-  scores,
-  tournamentId,
-  collectionName,
-  playerNumber1
-) {
+async function processMatches(tournamentId, collectionName, playerNumber1) {
   if (tournamentId != null && collectionName != null && playerNumber1 != null) {
     const playerNumber2 = await getOpponentNumber(
       collectionName,
@@ -105,9 +95,20 @@ async function processMatches(
         playerNumber2
       );
 
-      const result = await compareScores(scoreSheet1, scoreSheet2);
-      console.log(result);
+      const result = await compareScores(
+        scoreSheet1,
+        scoreSheet2,
+        playerNumber1,
+        playerNumber2
+      );
       //TODO: Update the result in the database
+      await processPlayers(
+        result,
+        tournamentId,
+        collectionName,
+        playerNumber1,
+        playerNumber2
+      );
     } else {
       console.log("Error getting opponent number");
     }
@@ -171,8 +172,13 @@ async function fetchScoreSheet(tournamentId, collectionName, playerNumber) {
     return null;
   }
 }
-// DONE??
-const compareScores = async (scoreSheet1, scoreSheet2) => {
+// DONE
+const compareScores = async (
+  scoreSheet1,
+  scoreSheet2,
+  playerNumber1,
+  playerNumber2
+) => {
   let score = {
     currentHole: 1,
     holesPlayed: 0,
@@ -239,6 +245,13 @@ const compareScores = async (scoreSheet1, scoreSheet2) => {
     }
   }
 
+  if (score.result === 0) {
+    if (playerNumber1 < playerNumber2) {
+      score.result = -1;
+    } else {
+      score.result = 1;
+    }
+  }
   return score;
 };
 
@@ -287,5 +300,54 @@ async function getOpponentNumber(collectionName, playerNumber) {
       default:
         return null;
     }
+  }
+}
+
+async function processPlayers(
+  score,
+  tournamentId,
+  collectionName,
+  playerNumber1,
+  playerNumber2
+) {
+  switch (collectionName) {
+    case "I_Cuartos":
+      await processQuarterFinals(
+        score,
+        tournamentId,
+        collectionName,
+        playerNumber1,
+        playerNumber2
+      );
+      break;
+    case "I_Semifinales":
+      await processSemiFinals(
+        score,
+        tournamentId,
+        collectionName,
+        playerNumber1,
+        playerNumber2
+      );
+      break;
+    case "I_Finales":
+      await processFinals(
+        score,
+        tournamentId,
+        collectionName,
+        playerNumber1,
+        playerNumber2
+      );
+      break;
+    case "I_TercerCuarto":
+      await processThirdPlace(
+        score,
+        tournamentId,
+        collectionName,
+        playerNumber1,
+        playerNumber2
+      );
+      break;
+    default:
+      console.log("Collection name not recognized.");
   }
 }

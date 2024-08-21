@@ -262,7 +262,7 @@
           <div style="display: flex; margin-bottom: 1em">
             <button
               onclick="storeScores()"
-              id="cuartos_finishButton"
+              id="cargarScoreButtonCuartos"
               class="w-25 mt-4 btn btn-primary mx-2 w-50"
             >
               Cargar Score
@@ -291,7 +291,9 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Selecciona todos los inputs de puntuación
         const inputs = document.querySelectorAll(".score-input");
-        const submitButton = document.getElementById("cuartos_finishButton");
+        const submitButton = document.getElementById(
+          "cargarScoreButtonCuartos"
+        );
 
         // Función para verificar si algún input tiene valor
         function checkInputs() {
