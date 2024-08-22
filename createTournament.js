@@ -1,5 +1,3 @@
-// index.js
-
 import {
   doc,
   setDoc,
@@ -39,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         name: tournamentName,
         start_date: startDate,
         finish_date: endDate,
-        urlImage: urlImage,
+        logo: urlImage,
         activo: activo,
       };
 
@@ -86,20 +84,18 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         };
 
-        const createResults = (collectionName, numberOfDocuments) => {
-          for (let i = 1; i <= numberOfDocuments; i++) {
-            const matchId = `Match${i}`;
-            const docRef = doc(
-              collection(db, "I_Torneos", tournamentID, collectionName),
-              matchId
+        // Function to create the I_Resultados collection with 4 documents
+        const createResults = () => {
+          for (let i = 1; i <= 4; i++) {
+            const resultRef = doc(
+              collection(db, "I_Torneos", tournamentID, "I_Resultados")
             );
-
-            const matchData = {
+            const resultData = {
               id_player: "",
               name: "",
+              orden: i,
             };
-
-            batch.set(docRef, matchData);
+            batch.set(resultRef, resultData);
           }
         };
 
@@ -109,13 +105,11 @@ document.addEventListener("DOMContentLoaded", function () {
         createMatches("I_Finales", 2);
         createMatches("I_TercerCuarto", 2);
 
-        createResults("I_Cuartos_Resultados", 4);
-        createResults("I_Semis_Resultados", 2);
-        createResults("I_Finales_Resultados", 1);
-        createResults("I_TercerCuarto_Resultados", 1);
+        // Create the I_Resultados collection
+        createResults();
 
         await batch.commit();
-        console.log("Players and matches added to the tournament");
+        console.log("Players, matches, and results added to the tournament");
       } catch (e) {
         console.error("Error adding document: ", e);
       }

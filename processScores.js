@@ -101,7 +101,11 @@ async function processMatches(tournamentId, collectionName, playerNumber1) {
         playerNumber1,
         playerNumber2
       );
-      //TODO: Update the result in the database
+
+      if (result.stillPlaying === true) {
+        return;
+      }
+
       await processPlayers(
         result,
         tournamentId,
@@ -245,7 +249,7 @@ const compareScores = async (
     }
   }
 
-  if (score.result === 0) {
+  if (score.result === 0 && score.stillPlaying === false) {
     if (playerNumber1 < playerNumber2) {
       score.result = -1;
     } else {
@@ -281,13 +285,13 @@ async function getOpponentNumber(collectionName, playerNumber) {
   } else if (collectionName === "I_Semifinales") {
     switch (playerNumber) {
       case 1:
-        return 4;
-      case 2:
-        return 3;
-      case 3:
         return 2;
-      case 4:
+      case 2:
         return 1;
+      case 3:
+        return 4;
+      case 4:
+        return 3;
       default:
         return null;
     }
@@ -303,6 +307,70 @@ async function getOpponentNumber(collectionName, playerNumber) {
   }
 }
 
+//DONE
+async function getNextPlayerOrder(
+  playerNumber1,
+  playerNumber2,
+  collectionName
+) {
+  if (collectionName === "I_Cuartos") {
+    if (
+      playerNumber1 === 1 ||
+      playerNumber1 === 8 ||
+      playerNumber2 === 1 ||
+      playerNumber2 === 8
+    ) {
+      return 1;
+    } else if (
+      playerNumber1 === 2 ||
+      playerNumber1 === 7 ||
+      playerNumber2 === 2 ||
+      playerNumber2 === 7
+    ) {
+      return 3;
+    } else if (
+      playerNumber1 === 3 ||
+      playerNumber1 === 6 ||
+      playerNumber2 === 3 ||
+      playerNumber2 === 6
+    ) {
+      return 4;
+    } else if (
+      playerNumber1 === 4 ||
+      playerNumber1 === 5 ||
+      playerNumber2 === 4 ||
+      playerNumber2 === 5
+    ) {
+      return 2;
+    }
+  } else if (collectionName === "I_Semifinales") {
+    if (
+      playerNumber1 === 1 ||
+      playerNumber1 === 2 ||
+      playerNumber2 === 2 ||
+      playerNumber2 === 1
+    ) {
+      return 1;
+    } else if (
+      playerNumber1 === 4 ||
+      playerNumber1 === 3 ||
+      playerNumber2 === 3 ||
+      playerNumber2 === 4
+    ) {
+      return 2;
+    }
+  } else if (
+    collectionName === "I_Finales" ||
+    collectionName === "I_TercerCuarto"
+  ) {
+    if (playerNumber1 === 1) {
+      return 1;
+    } else if (playerNumber1 === 2) {
+      return 2;
+    }
+  }
+}
+
 async function processPlayers(
   score,
   tournamentId,
@@ -310,44 +378,441 @@ async function processPlayers(
   playerNumber1,
   playerNumber2
 ) {
+  let nextPlayerOrder;
+  let currentOrder;
+  let winnerOrder;
+  let looserOrder;
   switch (collectionName) {
     case "I_Cuartos":
+      nextPlayerOrder = await getNextPlayerOrder(
+        playerNumber1,
+        playerNumber2,
+        collectionName
+      );
+      currentOrder = score.result < 1 ? playerNumber1 : playerNumber2;
       await processQuarterFinals(
         score,
         tournamentId,
         collectionName,
-        playerNumber1,
-        playerNumber2
+        currentOrder,
+        nextPlayerOrder
       );
       break;
     case "I_Semifinales":
+      nextPlayerOrder = await getNextPlayerOrder(
+        playerNumber1,
+        playerNumber2,
+        collectionName
+      );
+      winnerOrder = score.result < 1 ? playerNumber1 : playerNumber2;
+      looserOrder =
+        winnerOrder === playerNumber1 ? playerNumber2 : playerNumber1;
       await processSemiFinals(
         score,
         tournamentId,
         collectionName,
-        playerNumber1,
-        playerNumber2
+        nextPlayerOrder,
+        winnerOrder,
+        looserOrder
       );
       break;
+
     case "I_Finales":
+      winnerOrder = score.result < 1 ? playerNumber1 : playerNumber2;
+      looserOrder =
+        winnerOrder === playerNumber1 ? playerNumber2 : playerNumber1;
       await processFinals(
         score,
         tournamentId,
         collectionName,
-        playerNumber1,
-        playerNumber2
+        winnerOrder,
+        looserOrder
       );
       break;
     case "I_TercerCuarto":
+      winnerOrder = score.result < 1 ? playerNumber1 : playerNumber2;
+      looserOrder =
+        winnerOrder === playerNumber1 ? playerNumber2 : playerNumber1;
       await processThirdPlace(
         score,
         tournamentId,
         collectionName,
-        playerNumber1,
-        playerNumber2
+        winnerOrder,
+        looserOrder
       );
       break;
     default:
       console.log("Collection name not recognized.");
+  }
+}
+
+async function processQuarterFinals(
+  score,
+  tournamentId,
+  collectionName,
+  currentOrder,
+  nextPlayerOrder
+) {
+  if (score === null) {
+    console.log("Score is null.");
+    return;
+  }
+
+  if (score.stillPlaying === true) {
+    console.log("Function called when players are still playing");
+    return;
+  }
+
+  const db = window.db;
+
+  try {
+    const cuartosQuery = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", currentOrder)
+    );
+
+    const cuartosSnapshot = await getDocs(cuartosQuery);
+
+    if (cuartosSnapshot.empty) {
+      console.log(
+        "No document found in ${collectionName} with the specified orden"
+      );
+      return;
+    }
+
+    const cuartosDoc = cuartosSnapshot.docs[0];
+    const { name, id_player } = cuartosDoc.data();
+
+    const semisQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_Semifinales"),
+      where("orden", "==", nextPlayerOrder)
+    );
+
+    const semisSnapshot = await getDocs(semisQuery);
+
+    if (semisSnapshot.empty) {
+      console.log(
+        "No document found in I_Semifinales with the specified orden"
+      );
+      return;
+    }
+
+    const semisDocRef = semisSnapshot.docs[0].ref;
+
+    await updateDoc(semisDocRef, {
+      name: name,
+      id_player: id_player,
+    });
+
+    console.log(
+      `Updated I_Semifinales document with orden ${nextPlayerOrder} with player name ${name} and id_player ${id_player}`
+    );
+  } catch (error) {
+    console.error("Error processing quarter finals:", error);
+  }
+}
+
+async function processSemiFinals(
+  score,
+  tournamentId,
+  collectionName,
+  nextPlayerOrder,
+  winnerOrder,
+  looserOrder
+) {
+  if (score === null) {
+    console.log("Error processing players, score is null.");
+    return;
+  }
+
+  if (score.stillPlaying === true) {
+    console.log("Function called when players are still playing");
+    return;
+  }
+
+  const db = window.db;
+
+  try {
+    const semisQueryWinner = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", winnerOrder)
+    );
+
+    const semisQueryLooser = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", looserOrder)
+    );
+
+    const semisSnapshotWinner = await getDocs(semisQueryWinner);
+    const semisSnapshotLooser = await getDocs(semisQueryLooser);
+
+    if (semisSnapshotWinner.empty || semisSnapshotLooser.empty) {
+      console.log(
+        `No document found in ${collectionName} with the specified orden`
+      );
+      return;
+    }
+
+    const winnerDoc = semisSnapshotWinner.docs[0];
+    const loserDoc = semisSnapshotLooser.docs[0];
+
+    const winnerData = winnerDoc.data();
+    const loserData = loserDoc.data();
+
+    const finalsQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_Finales"),
+      where("orden", "==", nextPlayerOrder)
+    );
+
+    const finalsSnapshot = await getDocs(finalsQuery);
+
+    if (finalsSnapshot.empty) {
+      console.log(
+        `No document found in I_Finales with orden ${nextPlayerOrder}`
+      );
+      return;
+    }
+
+    const finalsDocRef = finalsSnapshot.docs[0].ref;
+
+    await updateDoc(finalsDocRef, {
+      name: winnerData.name,
+      id_player: winnerData.id_player,
+    });
+
+    console.log(
+      `Updated I_Finales document with orden ${nextPlayerOrder} with player name ${winnerData.name} and id_player ${winnerData.id_player}`
+    );
+
+    const tercerCuartoQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_TercerCuarto"),
+      where("orden", "==", nextPlayerOrder)
+    );
+
+    const tercerCuartoSnapshot = await getDocs(tercerCuartoQuery);
+
+    if (tercerCuartoSnapshot.empty) {
+      console.log(
+        `No document found in I_TercerCuarto with orden ${nextPlayerOrder}`
+      );
+      return;
+    }
+
+    const tercerCuartoDocRef = tercerCuartoSnapshot.docs[0].ref;
+
+    await updateDoc(tercerCuartoDocRef, {
+      name: loserData.name,
+      id_player: loserData.id_player,
+    });
+
+    console.log(
+      `Updated I_TercerCuarto document with orden ${nextPlayerOrder} with player name ${loserData.name} and id_player ${loserData.id_player}`
+    );
+  } catch (error) {
+    console.error("Error processing semifinals:", error);
+  }
+}
+
+async function processFinals(
+  score,
+  tournamentId,
+  collectionName,
+  winnerOrder,
+  looserOrder
+) {
+  if (score === null) {
+    console.log("Error processing players, score is null.");
+    return;
+  }
+
+  if (score.stillPlaying === true) {
+    console.log("Function called when players are still playing");
+    return;
+  }
+
+  const db = window.db;
+
+  try {
+    // Fetch the winner's document from the specified collection
+    const winnerQuery = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", winnerOrder)
+    );
+    const winnerSnapshot = await getDocs(winnerQuery);
+
+    if (winnerSnapshot.empty) {
+      console.log(
+        `No document found in ${collectionName} with orden ${winnerOrder}`
+      );
+      return;
+    }
+
+    const winnerDoc = winnerSnapshot.docs[0];
+    const winnerData = winnerDoc.data();
+
+    // Fetch the loser's document from the specified collection
+    const looserQuery = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", looserOrder)
+    );
+    const looserSnapshot = await getDocs(looserQuery);
+
+    if (looserSnapshot.empty) {
+      console.log(
+        `No document found in ${collectionName} with orden ${looserOrder}`
+      );
+      return;
+    }
+
+    const looserDoc = looserSnapshot.docs[0];
+    const looserData = looserDoc.data();
+
+    // Update the document in I_Resultados where orden == 1 (Winner)
+    const winnerResultQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_Resultados"),
+      where("orden", "==", 1)
+    );
+    const winnerResultSnapshot = await getDocs(winnerResultQuery);
+
+    if (winnerResultSnapshot.empty) {
+      console.log("No document found in I_Resultados with orden 1");
+      return;
+    }
+
+    const winnerResultDocRef = winnerResultSnapshot.docs[0].ref;
+    await updateDoc(winnerResultDocRef, {
+      name: winnerData.name,
+      id_player: winnerData.id_player,
+    });
+
+    console.log(
+      `Updated I_Resultados document with orden 1 with player name ${winnerData.name} and id_player ${winnerData.id_player}`
+    );
+
+    // Update the document in I_Resultados where orden == 2 (Loser)
+    const looserResultQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_Resultados"),
+      where("orden", "==", 2)
+    );
+    const looserResultSnapshot = await getDocs(looserResultQuery);
+
+    if (looserResultSnapshot.empty) {
+      console.log("No document found in I_Resultados with orden 2");
+      return;
+    }
+
+    const looserResultDocRef = looserResultSnapshot.docs[0].ref;
+    await updateDoc(looserResultDocRef, {
+      name: looserData.name,
+      id_player: looserData.id_player,
+    });
+
+    console.log(
+      `Updated I_Resultados document with orden 2 with player name ${looserData.name} and id_player ${looserData.id_player}`
+    );
+  } catch (error) {
+    console.error("Error processing finals:", error);
+  }
+}
+
+async function processThirdPlace(
+  score,
+  tournamentId,
+  collectionName,
+  winnerOrder,
+  looserOrder
+) {
+  if (score === null) {
+    console.log("Error processing players, score is null.");
+    return;
+  }
+
+  if (score.stillPlaying === true) {
+    console.log("Function called when players are still playing");
+    return;
+  }
+
+  const db = window.db;
+
+  try {
+    // Fetch the winner's document from the specified collection
+    const winnerQuery = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", winnerOrder)
+    );
+    const winnerSnapshot = await getDocs(winnerQuery);
+
+    if (winnerSnapshot.empty) {
+      console.log(
+        `No document found in ${collectionName} with orden ${winnerOrder}`
+      );
+      return;
+    }
+
+    const winnerDoc = winnerSnapshot.docs[0];
+    const winnerData = winnerDoc.data();
+
+    // Fetch the loser's document from the specified collection
+    const looserQuery = query(
+      collection(db, "I_Torneos", tournamentId, collectionName),
+      where("orden", "==", looserOrder)
+    );
+    const looserSnapshot = await getDocs(looserQuery);
+
+    if (looserSnapshot.empty) {
+      console.log(
+        `No document found in ${collectionName} with orden ${looserOrder}`
+      );
+      return;
+    }
+
+    const looserDoc = looserSnapshot.docs[0];
+    const looserData = looserDoc.data();
+
+    // Update the document in I_Resultados where orden == 3 (Winner)
+    const winnerResultQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_Resultados"),
+      where("orden", "==", 3)
+    );
+    const winnerResultSnapshot = await getDocs(winnerResultQuery);
+
+    if (winnerResultSnapshot.empty) {
+      console.log("No document found in I_Resultados with orden 3");
+      return;
+    }
+
+    const winnerResultDocRef = winnerResultSnapshot.docs[0].ref;
+    await updateDoc(winnerResultDocRef, {
+      name: winnerData.name,
+      id_player: winnerData.id_player,
+    });
+
+    console.log(
+      `Updated I_Resultados document with orden 3 with player name ${winnerData.name} and id_player ${winnerData.id_player}`
+    );
+
+    // Update the document in I_Resultados where orden == 4 (Loser)
+    const looserResultQuery = query(
+      collection(db, "I_Torneos", tournamentId, "I_Resultados"),
+      where("orden", "==", 4)
+    );
+    const looserResultSnapshot = await getDocs(looserResultQuery);
+
+    if (looserResultSnapshot.empty) {
+      console.log("No document found in I_Resultados with orden 4");
+      return;
+    }
+
+    const looserResultDocRef = looserResultSnapshot.docs[0].ref;
+    await updateDoc(looserResultDocRef, {
+      name: looserData.name,
+      id_player: looserData.id_player,
+    });
+
+    console.log(
+      `Updated I_Resultados document with orden 4 with player name ${looserData.name} and id_player ${looserData.id_player}`
+    );
+  } catch (error) {
+    console.error("Error processing Tercer Cuarto:", error);
   }
 }

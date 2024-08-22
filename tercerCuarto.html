@@ -308,23 +308,26 @@
         let modal = document.getElementById(id);
         let inputs = modal.querySelectorAll("input");
 
-        selectedPlayerNumber = playerNumber;
-
-        // Cambia los IDs de los inputs según el jugador seleccionado
-        inputs.forEach((input, index) => {
-          input.id = `h${index + 1}_player${playerNumber}`;
-        });
-
-        // Actualiza el título del modal para reflejar el jugador seleccionado
-        let title = modal.querySelector(".col-12.text-center");
-        title.textContent = `Player ${playerNumber}`;
-
-        fetchScoresForPlayer(playerNumber, inputs);
-
-        // Alterna la visibilidad del modal
+        // Check if the modal is currently hidden (meaning it will be opened)
         if (modal.style.display === "none" || modal.style.display === "") {
+          selectedPlayerNumber = playerNumber;
+
+          // Update the IDs of the inputs according to the selected player
+          inputs.forEach((input, index) => {
+            input.id = `h${index + 1}_player${playerNumber}`;
+          });
+
+          // Update the title of the modal to reflect the selected player
+          let title = modal.querySelector(".col-12.text-center");
+          title.textContent = `Player ${playerNumber}`;
+
+          // Fetch scores only when the modal is being opened
+          fetchScoresForPlayer(playerNumber, inputs);
+
+          // Show the modal
           modal.style.display = "block";
         } else {
+          // Hide the modal
           modal.style.display = "none";
         }
       };
