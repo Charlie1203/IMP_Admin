@@ -633,7 +633,6 @@ async function processFinals(
   const db = window.db;
 
   try {
-    // Fetch the winner's document from the specified collection
     const winnerQuery = query(
       collection(db, "I_Torneos", tournamentId, collectionName),
       where("orden", "==", winnerOrder)
