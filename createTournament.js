@@ -43,14 +43,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         const db = window.db;
+        // Add players to the I_Players sub-collection
+
+        if (tournamentData.activo === 1) {
+          const activeTournamentQuery = query(
+            collection(db, "I_Torneos"),
+            where("activo", "==", 1)
+          );
+          const activeTournamentsSnapshot = await getDocs(
+            activeTournamentQuery
+          );
+
+          const batch = writeBatch(db);
+
+          activeTournamentsSnapshot.forEach((doc) => {
+            const tournamentRef = doc.ref;
+            batch.update(tournamentRef, { activo: 0 });
+          });
+          await batch.commit();
+        }
+
+        const players = await getPlayers();
+        const batch = writeBatch(db);
 
         // Add the tournament data to Firestore
         await setDoc(doc(db, "I_Torneos", tournamentID), tournamentData);
         console.log("Document written with ID: ", tournamentID);
-
-        // Add players to the I_Players sub-collection
-        const players = await getPlayers();
-        const batch = writeBatch(db);
 
         players.forEach((player) => {
           const playerRef = doc(
@@ -99,6 +117,13 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         };
 
+        const createEmptyCollection = (collectionName) => {
+          const placeholderRef = doc(
+            collection(db, "I_Torneos", tournamentID, collectionName)
+          );
+          batch.set(placeholderRef, {}); // Empty object as a placeholder document
+        };
+
         // Create matches for different stages
         createMatches("I_Cuartos", 8);
         createMatches("I_Semifinales", 4);
@@ -108,7 +133,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create the I_Resultados collection
         createResults();
 
+        createEmptyCollection("I_Clasificacion_Cuartos");
+        createEmptyCollection("I_Clasificacion_Semis");
+
         await batch.commit();
+
         console.log("Players, matches, and results added to the tournament");
       } catch (e) {
         console.error("Error adding document: ", e);
