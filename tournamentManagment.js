@@ -2,6 +2,7 @@ import { getPlayers } from "./players.js";
 import {
   doc,
   setDoc,
+  getDoc,
   collection,
   writeBatch,
   query,
@@ -135,7 +136,106 @@ async function handleCuartosButtonClick() {
 
   await batch.commit();
   console.log("Players updated in I_Cuartos collection");
+
+  await processClasificacionCuartos(tournamentId);
 }
+
+async function processClasificacionCuartos(tournamentId) {
+  const db = window.db;
+
+  // Fetch all players in I_Cuartos
+  console.log("Fetching players from I_Cuartos...");
+  const cuartosCollection = collection(
+    db,
+    "I_Torneos",
+    tournamentId,
+    "I_Cuartos"
+  );
+  const cuartosSnapshot = await getDocs(cuartosCollection);
+  const cuartosPlayers = cuartosSnapshot.docs.map(
+    (doc) => doc.data().id_player
+  );
+
+  // Fetch all users in I_Apuestas
+  console.log("Fetching all users from I_Apuestas...");
+  const apuestasCollection = collection(
+    db,
+    "I_Torneos",
+    tournamentId,
+    "I_Apuestas"
+  );
+  const apuestasSnapshot = await getDocs(apuestasCollection);
+
+  // Prepare the I_Clasificacion_Cuartos collection
+  const clasificacionCollection = collection(
+    db,
+    "I_Torneos",
+    tournamentId,
+    "I_Clasificacion_Cuartos"
+  );
+  const batch = writeBatch(db);
+
+  for (const apuestaDoc of apuestasSnapshot.docs) {
+    const apuestaData = apuestaDoc.data();
+    const matchingPlayers = [];
+
+    // Fetch the user's name
+    const userName = await getUserNameById(apuestaDoc.id);
+
+    // Check how many of the players in this user's bet are in I_Cuartos
+    for (let i = 1; i <= 8; i++) {
+      const playerId = apuestaData[`player${i}`];
+
+      if (cuartosPlayers.includes(playerId)) {
+        // Fetch the player's name
+        const playerName = await getPlayerNameById(playerId, tournamentId);
+
+        matchingPlayers.push({ playerId, playerName });
+      }
+    }
+
+    // If there are at least two matching players, add them to I_Clasificacion_Cuartos
+    if (matchingPlayers.length >= 2) {
+      const clasificacionDocRef = doc(clasificacionCollection, apuestaDoc.id); // Using userId as the document ID
+      batch.set(clasificacionDocRef, {
+        userId: apuestaDoc.id,
+        userName: userName,
+        players: matchingPlayers, // Array of objects with playerId and playerName
+      });
+    } else {
+    }
+  }
+
+  // Commit the batch operation
+
+  await batch.commit();
+}
+
+const getUserNameById = async (userId) => {
+  const userDocRef = doc(db, "I_Members", userId);
+  const userDoc = await getDoc(userDocRef);
+  if (userDoc.exists()) {
+    return userDoc.data().firstName + " " + userDoc.data().lastName;
+  } else {
+    console.error(`No user found with ID: ${userId}`);
+    return "Unknown User";
+  }
+};
+
+const getPlayerNameById = async (playerId, tournamentId) => {
+  const db = window.db;
+  const playerQuery = query(
+    collection(db, "I_Torneos", tournamentId, "I_Players"),
+    where("id_player", "==", playerId)
+  );
+  const playerSnapshot = await getDocs(playerQuery);
+
+  if (!playerSnapshot.empty) {
+    return playerSnapshot.docs[0].data().name;
+  } else {
+    return null;
+  }
+};
 
 async function getActiveTournamentId() {
   const db = window.db;
