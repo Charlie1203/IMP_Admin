@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <title>Apuestas</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h1>Datos de Apuestas</h1>
+          <ul id="betsList" class="list-group mt-4"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+      import {
+        getFirestore,
+        getDoc,
+        doc,
+        collection,
+        getDocs,
+        query,
+        where,
+      } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+      import { firebaseConfig } from "./firebaseConfig.js";
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Function to get the active tournament ID
+      const getActiveTournamentId = async () => {
+        const q = query(collection(db, "I_Torneos"), where("activo", "==", 1));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          return querySnapshot.docs[0].id;
+        } else {
+          console.error("No active tournament found.");
+          return null;
+        }
+      };
+
+      const getUserNameById = async (userId) => {
+        const userDocRef = doc(db, "I_Members", userId);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          return userDoc.data().firstName + " " + userDoc.data().lastName;
+        } else {
+          console.error(`No user found with ID: ${userId}`);
+          return "Unknown User";
+        }
+      };
+
+      const getPlayerNameById = async (playerId, tournamentId) => {
+        const playersCollectionRef = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Players"
+        );
+        const q = query(
+          playersCollectionRef,
+          where("id_player", "==", playerId)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const playerDoc = querySnapshot.docs[0]; // Assuming playerId is unique and only one document matches
+          return playerDoc.data().name;
+        } else {
+          console.error(`No player found with ID: ${playerId}`);
+          return "Unknown Player";
+        }
+      };
+
+      // Function to fetch and display bets data
+      const fetchBets = async () => {
+        const betsList = document.getElementById("betsList");
+        betsList.innerHTML = ""; // Clear any existing data
+
+        try {
+          const activeTournament = await getActiveTournamentId();
+          if (!activeTournament) {
+            betsList.innerHTML =
+              "<li class='list-group-item text-danger'>No active tournament found</li>";
+            return;
+          }
+
+          const betsCollection = collection(
+            db,
+            "I_Torneos",
+            activeTournament,
+            "I_Apuestas"
+          );
+
+          const querySnapshot = await getDocs(betsCollection);
+          for (const betDoc of querySnapshot.docs) {
+            const bet = betDoc.data();
+            const userName = await getUserNameById(betDoc.id);
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item";
+
+            // Construct the text content from player1 through player8
+            let betDetails = `User Name: ${userName}, `;
+            const tournamentId = await getActiveTournamentId();
+            for (let i = 1; i <= 8; i++) {
+              const playerName = await getPlayerNameById(
+                bet[`player${i}`],
+                tournamentId
+              );
+              betDetails += `Player ${i}: ${playerName}, `;
+            }
+            // Remove the last comma and space
+            betDetails = betDetails.slice(0, -2);
+
+            listItem.textContent = betDetails;
+            betsList.appendChild(listItem);
+          }
+        } catch (error) {
+          console.error("Error fetching bets: ", error);
+          betsList.innerHTML =
+            "<li class='list-group-item text-danger'>Failed to load data</li>";
+        }
+      };
+
+      // Fetch bets data on page load
+      fetchBets();
+    </script>
+  </body>
+</html>
