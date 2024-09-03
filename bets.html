@@ -12,10 +12,72 @@
     <title>Apuestas</title>
   </head>
   <body>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="playersModal"
+      tabindex="-1"
+      aria-labelledby="playersModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="playersModalLabel">Jugadores</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- This is where the players' information will be loaded -->
+            <p id="playersInfo">Cargando Jugadores...</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container mt-5">
       <div class="row">
         <div class="col-12 text-center">
-          <h1>Datos de Apuestas</h1>
+          <h1>Apostadores</h1>
+
+          <!-- Buttons row -->
+          <div class="d-flex justify-content-center mb-4">
+            <button
+              class="btn btn-success mx-2"
+              id="generateCuartosBtn"
+              style="background-color: lightslategrey"
+            >
+              Generar Clasificación Cuartos
+            </button>
+            <button
+              class="btn btn-warning mx-2"
+              id="generateSemisBtn"
+              style="background-color: lightslategrey"
+            >
+              Generar Clasificación Semifinales
+            </button>
+            <button
+              class="btn btn-danger mx-2"
+              id="generateResultsBtn"
+              style="background-color: lightslategrey"
+            >
+              Generar Resultados de Apostadores
+            </button>
+          </div>
+
           <ul id="betsList" class="list-group mt-4"></ul>
         </div>
       </div>
@@ -83,6 +145,40 @@
           return "Unknown Player";
         }
       };
+      const getPlayersById = async (tournamentId, userId) => {
+        const betDocRef = doc(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Apuestas",
+          userId
+        );
+
+        const betDoc = await getDoc(betDocRef);
+
+        if (betDoc.exists()) {
+          const betData = betDoc.data();
+          let playerDetails = "";
+
+          for (let i = 1; i <= 8; i++) {
+            const playerId = betData[`player${i}`];
+
+            if (playerId) {
+              const playerName = await getPlayerNameById(
+                playerId,
+                tournamentId
+              );
+              playerDetails += `<p>Player ${i}: ${playerName}</p>`;
+            }
+          }
+          const playersInfoElement = document.getElementById("playersInfo");
+          playersInfoElement.innerHTML = playerDetails;
+        } else {
+          console.error(`No bet data found for user ID: ${userId}`);
+          document.getElementById("playersInfo").innerHTML =
+            "No bet data found.";
+        }
+      };
 
       // Function to fetch and display bets data
       const fetchBets = async () => {
@@ -105,27 +201,38 @@
           );
 
           const querySnapshot = await getDocs(betsCollection);
+          const usersDisplayed = new Set(); // To avoid displaying duplicate user names
+
           for (const betDoc of querySnapshot.docs) {
-            const bet = betDoc.data();
             const userName = await getUserNameById(betDoc.id);
-            const listItem = document.createElement("li");
-            listItem.className = "list-group-item";
 
-            // Construct the text content from player1 through player8
-            let betDetails = `User Name: ${userName}, `;
-            const tournamentId = await getActiveTournamentId();
-            for (let i = 1; i <= 8; i++) {
-              const playerName = await getPlayerNameById(
-                bet[`player${i}`],
-                tournamentId
-              );
-              betDetails += `Player ${i}: ${playerName}, `;
+            // Check if the user name has already been displayed
+            if (!usersDisplayed.has(userName)) {
+              const listItem = document.createElement("li");
+              listItem.className = "list-group-item";
+
+              // Create a button for each user name
+              const userButton = document.createElement("button");
+              userButton.className = "btn btn-primary w-100"; // Styling the button
+              userButton.textContent = `User Name: ${userName}`;
+
+              // Set up the button click to trigger the modal
+              userButton.addEventListener("click", async () => {
+                // Here you would load the player's information into the modal, for now just show the modal
+                const modal = new bootstrap.Modal(
+                  document.getElementById("playersModal")
+                );
+                modal.show();
+
+                await getPlayersById(activeTournament, betDoc.id);
+              });
+
+              // Append the button to the list item
+              listItem.appendChild(userButton);
+              betsList.appendChild(listItem);
+
+              usersDisplayed.add(userName); // Add the user name to the set
             }
-            // Remove the last comma and space
-            betDetails = betDetails.slice(0, -2);
-
-            listItem.textContent = betDetails;
-            betsList.appendChild(listItem);
           }
         } catch (error) {
           console.error("Error fetching bets: ", error);
@@ -137,5 +244,15 @@
       // Fetch bets data on page load
       fetchBets();
     </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

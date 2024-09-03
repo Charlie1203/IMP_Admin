@@ -1,0 +1,17 @@
+
+#####################################
+Optimizar la vista de apuestas en el panel de administrador, 
+mostrar solo los usuarios y 
+cuando se aprete te muestra una ventanita con los jugadores
+#####################################
+
+#####################################
+Dos botones: Clasificacion cuartos y clasificacion semis en la misma ventana que esta el boton de apuestas
+Mismo concepto mostrar no los 8 pero los jugadores en cuestion que pasaron
+Boton resultados de los apostadores que se habilite el domingo
+#####################################
+
+
+#####################################
+Generar 
+#####################################
