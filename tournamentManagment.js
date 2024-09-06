@@ -8,10 +8,19 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
 } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 let allPlayers = [];
 let currentInputId = null;
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebaseConfig.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window.db = db;
 
 // Main setup function
 function setup() {
@@ -19,6 +28,92 @@ function setup() {
   setupPlayerInputs();
   setupSearchInput();
   displayActiveTournamentName();
+}
+
+export async function activarApuestas() {
+  const tournamentId = await getActiveTournamentId();
+  const db = window.db;
+
+  if (!tournamentId) {
+    console.error("No active tournament found.");
+    alert("No active tournament found.");
+    return;
+  }
+
+  try {
+    const tournamentDocRef = doc(db, "I_Torneos", tournamentId);
+
+    // Set the apuestas field to 1
+    await updateDoc(tournamentDocRef, {
+      apuestas: 1,
+    });
+
+    console.log("Apuestas activated successfully.");
+    alert("Apuestas activated successfully.");
+  } catch (error) {
+    console.error("Error activating apuestas: ", error);
+    alert("Error activating apuestas.");
+  }
+}
+
+// Function to deactivate bets
+export async function desactivarApuestas() {
+  const tournamentId = await getActiveTournamentId();
+  const db = window.db;
+
+  if (!tournamentId) {
+    console.error("No active tournament found.");
+    alert("No active tournament found.");
+    return;
+  }
+
+  try {
+    const tournamentRef = doc(db, "I_Torneos", tournamentId);
+    await updateDoc(tournamentRef, {
+      apuestas: 0,
+    });
+
+    console.log("Apuestas Desactivated successfully.");
+    alert("Apuestas Desactivated successfully.");
+  } catch (error) {
+    console.error("Error Desactivating apuestas: ", error);
+    alert("Error Desactivating apuestas.");
+  }
+}
+
+export async function activateBracketButton(Bracket) {
+  const tournamentId = await getActiveTournamentId();
+  const db = window.db;
+
+  if (!tournamentId) {
+    console.error("No active tournament found.");
+    alert("No active tournament found.");
+    return;
+  }
+
+  try {
+    const tournamentDocRef = doc(db, "I_Torneos", tournamentId);
+
+    switch (Bracket) {
+      case "cuartos":
+      case "semis":
+      case "finales":
+      case "":
+        await updateDoc(tournamentDocRef, {
+          active_bracket: Bracket, // This will be either cuartos, semis, finales, or an empty string
+        });
+        console.log(`Bracket set to ${Bracket}`);
+        alert(`Bracket activated: ${Bracket}`);
+        break;
+      default:
+        console.error("Invalid bracket value.");
+        alert("Invalid bracket value.");
+        break;
+    }
+  } catch (error) {
+    console.error("Error updating bracket: ", error);
+    alert("Error updating bracket.");
+  }
 }
 
 function setupCuartosButton() {
@@ -140,76 +235,76 @@ async function handleCuartosButtonClick() {
   //await processClasificacionCuartos(tournamentId);
 }
 
-async function processClasificacionCuartos(tournamentId) {
-  const db = window.db;
+// async function processClasificacionCuartos(tournamentId) {
+//   const db = window.db;
 
-  // Fetch all players in I_Cuartos
-  console.log("Fetching players from I_Cuartos...");
-  const cuartosCollection = collection(
-    db,
-    "I_Torneos",
-    tournamentId,
-    "I_Cuartos"
-  );
-  const cuartosSnapshot = await getDocs(cuartosCollection);
-  const cuartosPlayers = cuartosSnapshot.docs.map(
-    (doc) => doc.data().id_player
-  );
+//   // Fetch all players in I_Cuartos
+//   console.log("Fetching players from I_Cuartos...");
+//   const cuartosCollection = collection(
+//     db,
+//     "I_Torneos",
+//     tournamentId,
+//     "I_Cuartos"
+//   );
+//   const cuartosSnapshot = await getDocs(cuartosCollection);
+//   const cuartosPlayers = cuartosSnapshot.docs.map(
+//     (doc) => doc.data().id_player
+//   );
 
-  // Fetch all users in I_Apuestas
-  console.log("Fetching all users from I_Apuestas...");
-  const apuestasCollection = collection(
-    db,
-    "I_Torneos",
-    tournamentId,
-    "I_Apuestas"
-  );
-  const apuestasSnapshot = await getDocs(apuestasCollection);
+//   // Fetch all users in I_Apuestas
+//   console.log("Fetching all users from I_Apuestas...");
+//   const apuestasCollection = collection(
+//     db,
+//     "I_Torneos",
+//     tournamentId,
+//     "I_Apuestas"
+//   );
+//   const apuestasSnapshot = await getDocs(apuestasCollection);
 
-  // Prepare the I_Clasificacion_Cuartos collection
-  const clasificacionCollection = collection(
-    db,
-    "I_Torneos",
-    tournamentId,
-    "I_Clasificacion_Cuartos"
-  );
-  const batch = writeBatch(db);
+//   // Prepare the I_Clasificacion_Cuartos collection
+//   const clasificacionCollection = collection(
+//     db,
+//     "I_Torneos",
+//     tournamentId,
+//     "I_Clasificacion_Cuartos"
+//   );
+//   const batch = writeBatch(db);
 
-  for (const apuestaDoc of apuestasSnapshot.docs) {
-    const apuestaData = apuestaDoc.data();
-    const matchingPlayers = [];
+//   for (const apuestaDoc of apuestasSnapshot.docs) {
+//     const apuestaData = apuestaDoc.data();
+//     const matchingPlayers = [];
 
-    // Fetch the user's name
-    const userName = await getUserNameById(apuestaDoc.id);
+//     // Fetch the user's name
+//     const userName = await getUserNameById(apuestaDoc.id);
 
-    // Check how many of the players in this user's bet are in I_Cuartos
-    for (let i = 1; i <= 8; i++) {
-      const playerId = apuestaData[`player${i}`];
+//     // Check how many of the players in this user's bet are in I_Cuartos
+//     for (let i = 1; i <= 8; i++) {
+//       const playerId = apuestaData[`player${i}`];
 
-      if (cuartosPlayers.includes(playerId)) {
-        // Fetch the player's name
-        const playerName = await getPlayerNameById(playerId, tournamentId);
+//       if (cuartosPlayers.includes(playerId)) {
+//         // Fetch the player's name
+//         const playerName = await getPlayerNameById(playerId, tournamentId);
 
-        matchingPlayers.push({ playerId, playerName });
-      }
-    }
+//         matchingPlayers.push({ playerId, playerName });
+//       }
+//     }
 
-    // If there are at least two matching players, add them to I_Clasificacion_Cuartos
-    if (matchingPlayers.length >= 2) {
-      const clasificacionDocRef = doc(clasificacionCollection, apuestaDoc.id); // Using userId as the document ID
-      batch.set(clasificacionDocRef, {
-        userId: apuestaDoc.id,
-        userName: userName,
-        players: matchingPlayers, // Array of objects with playerId and playerName
-      });
-    } else {
-    }
-  }
+//     // If there are at least two matching players, add them to I_Clasificacion_Cuartos
+//     if (matchingPlayers.length >= 2) {
+//       const clasificacionDocRef = doc(clasificacionCollection, apuestaDoc.id); // Using userId as the document ID
+//       batch.set(clasificacionDocRef, {
+//         userId: apuestaDoc.id,
+//         userName: userName,
+//         players: matchingPlayers, // Array of objects with playerId and playerName
+//       });
+//     } else {
+//     }
+//   }
 
-  // Commit the batch operation
+//   // Commit the batch operation
 
-  await batch.commit();
-}
+//   await batch.commit();
+// }
 
 const getUserNameById = async (userId) => {
   const userDocRef = doc(db, "I_Members", userId);

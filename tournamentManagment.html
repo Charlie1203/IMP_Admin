@@ -19,10 +19,11 @@
       <div class="row">
         <div class="col-12 col-lg-3"></div>
         <div class="col-12 col-lg-6 text-center box">
-          <h1 class="">Tournament Managment</h1>
+          <h1 class="">Tournament Management</h1>
 
           <label class="mt-3">Tournament Name: </label>
           <span id="tournamentName">Loading...</span>
+
           <div style="display: flex" class="mt-5">
             <button
               class="btn btn-primary w-50 mx-2"
@@ -40,163 +41,52 @@
               Manejar partidos
             </button>
           </div>
+
           <button class="btn btn-secondary w-50 mx-2 mt-3" id="apuestas">
-            Apuestas
+            Panel de Apuestas
+          </button>
+
+          <!-- New Buttons -->
+          <button class="btn btn-success w-50 mx-2 mt-3" id="activarApuestas">
+            Activar apuestas
+          </button>
+
+          <button class="btn btn-danger w-50 mx-2 mt-3" id="desactivarApuestas">
+            Desactivar apuestas
+          </button>
+
+          <button class="btn btn-primary w-50 mx-2 mt-3" id="activarBracket">
+            Activar Bracket
           </button>
         </div>
         <div class="col-12 col-lg-3"></div>
       </div>
     </div>
 
-    <!-- MODAL CUARTOS -->
-    <div class="container-fluid modalCont" id="modalCuartos">
+    <!-- MODAL ACTIVAR BRACKET -->
+    <div class="container-fluid modalCont" id="modalActivarBracket">
       <div class="row modalBox">
         <div class="col-12 text-center mt-3">
-          <h1>Cargar Jugadores</h1>
+          <h1>Activar Bracket</h1>
         </div>
-        <div class="col-6">
-          <p class="mb-0 mt-3">Jugador 1</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player1"
-          />
-          <p class="mb-0 mt-3">Jugador 2</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player2"
-          />
-          <p class="mb-0 mt-3">Jugador 3</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player3"
-          />
-          <p class="mb-0 mt-3">Jugador 4</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player4"
-          />
+        <div class="col-12 text-center mt-3">
+          <button id="cuartos" class="w-50 py-2 mt-0 mb-0">Cuartos</button>
         </div>
-        <div class="col-6">
-          <p class="mb-0 mt-3">Jugador 5</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player5"
-          />
-          <p class="mb-0 mt-3">Jugador 6</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player6"
-          />
-          <p class="mb-0 mt-3">Jugador 7</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player7"
-          />
-          <p class="mb-0 mt-3">Jugador 8</p>
-          <input
-            style="cursor: pointer"
-            class="w-100 px-2"
-            type="text"
-            id="cuartos_player8"
-          />
-        </div>
-        <div class="col-12 text-center">
-          <div style="display: flex; margin-bottom: 1em">
-            <button
-              id="cuartos_finishButton"
-              class="w-25 mt-4 btn w-50 mx-2 btn-primary"
-            >
-              Cargar Jugadores
-            </button>
-            <button
-              onclick="handleModal('modalCuartos')"
-              id="closeButton"
-              class="w-25 mt-4 w-50 mx-2 btn btn-secondary"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL LISTA DE JUGADORES -->
-    <div class="container-fluid modalCont" id="modalPlayers">
-      <div class="row modalBox">
-        <div class="col-12 text-center">
-          <h1 class="mt-3">Lista de Jugadores</h1>
-        </div>
-        <div class="col-12 text-center">
-          <input
-            type="text"
-            id="searchPlayerInput"
-            placeholder="Buscar jugador..."
-            class="w-50 mt-2 mb-3"
-          />
-        </div>
-        <div class="col-lg-3 col-12"></div>
-        <div class="col-lg-6 col-12 players-container">
-          <ul id="playersList"></ul>
-        </div>
-        <div class="col-lg-3 col-12"></div>
-        <div class="col-12 text-center">
-          <button
-            onclick="handleModal('modalPlayers')"
-            id="closePlayersButton"
-            class="w-25 mt-4 btn btn-primary w-75"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL BRACKETS -->
-    <div class="container-fluid modalCont" id="brackets">
-      <div class="row modalBox">
-        <div class="col-12 text-center">
-          <h1 class="mt-5">Selecciona la bracket</h1>
-        </div>
-        <div class="col-12 text-center">
-          <button id="cuartos" class="w-50 py-2 mt-0 mb-0">
-            Cuartos de final
-          </button>
-        </div>
-        <div class="col-12 text-center">
+        <div class="col-12 text-center mt-3">
           <button id="semis" class="w-50 py-2 mt-0 mb-0">Semifinales</button>
         </div>
-
-        <div class="col-12 text-center">
-          <button id="tercerCuarto" class="w-50 py-2 mt-0 mb-0">
-            Final Perdedores
+        <div class="col-12 text-center mt-3">
+          <button id="finales" class="w-50 py-2 mt-0 mb-0">Finales</button>
+        </div>
+        <div class="col-12 text-center mt-3">
+          <button id="ningun" class="w-50 py-2 mt-0 mb-0">
+            Ningun Bracket esta activo
           </button>
         </div>
-
-        <div class="col-12 text-center">
-          <button id="finales" class="w-50 py-2 mt-0 mb-0">
-            Final Ganadores
-          </button>
-        </div>
-
-        <div class="col-12 text-center">
+        <div class="col-12 text-center mt-3">
           <button
-            onclick="handleModal('brackets')"
-            id="closeButton"
-            class="w-25 mt-4 btn btn-secondary mx-2 w-50"
+            id="cerrarModalActivarBracket"
+            class="w-25 mt-4 btn btn-secondary w-50"
           >
             Cerrar
           </button>
@@ -204,29 +94,14 @@
       </div>
     </div>
 
-    <script>
-      document.getElementById("cuartos").addEventListener("click", () => {
-        window.location.href = "quarterFinals.html";
-      });
+    <script type="module">
+      import {
+        activarApuestas,
+        desactivarApuestas,
+        activateBracketButton,
+      } from "./tournamentManagment.js";
 
-      document.getElementById("semis").addEventListener("click", () => {
-        window.location.href = "semiFinals.html";
-      });
-
-      document.getElementById("finales").addEventListener("click", () => {
-        window.location.href = "finales.html";
-      });
-
-      document.getElementById("tercerCuarto").addEventListener("click", () => {
-        window.location.href = "tercerCuarto.html";
-      });
-
-      document.getElementById("apuestas").addEventListener("click", () => {
-        window.location.href = "bets.html";
-      });
-    </script>
-
-    <script>
+      // Define handleModal
       let handleModal = (id) => {
         let modal = document.getElementById(id);
         if (getComputedStyle(modal).display === "none") {
@@ -235,6 +110,70 @@
           modal.style.display = "none";
         }
       };
+
+      // Ensure event listeners are added after the DOM is fully loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        // Add event listeners for new buttons
+        const activarApuestasBtn = document.getElementById("activarApuestas");
+        if (activarApuestasBtn) {
+          activarApuestasBtn.addEventListener("click", activarApuestas);
+        }
+
+        const desactivarApuestasBtn =
+          document.getElementById("desactivarApuestas");
+        if (desactivarApuestasBtn) {
+          desactivarApuestasBtn.addEventListener("click", desactivarApuestas);
+        }
+
+        const cuartosBtn = document.getElementById("cuartos");
+        if (cuartosBtn) {
+          cuartosBtn.addEventListener("click", () =>
+            activateBracketButton("cuartos")
+          );
+        }
+
+        const semisBtn = document.getElementById("semis");
+        if (semisBtn) {
+          semisBtn.addEventListener("click", () =>
+            activateBracketButton("semis")
+          );
+        }
+
+        const finalesBtn = document.getElementById("finales");
+        if (finalesBtn) {
+          finalesBtn.addEventListener("click", () =>
+            activateBracketButton("finales")
+          );
+        }
+
+        const ningunBtn = document.getElementById("ningun");
+        if (ningunBtn) {
+          ningunBtn.addEventListener("click", () => activateBracketButton(""));
+        }
+
+        const activarBracketBtn = document.getElementById("activarBracket");
+        if (activarBracketBtn) {
+          activarBracketBtn.addEventListener("click", () =>
+            handleModal("modalActivarBracket")
+          );
+        }
+
+        const cerrarModalBtn = document.getElementById(
+          "cerrarModalActivarBracket"
+        );
+        if (cerrarModalBtn) {
+          cerrarModalBtn.addEventListener("click", () =>
+            handleModal("modalActivarBracket")
+          );
+        }
+
+        const apuestasBtn = document.getElementById("apuestas");
+        if (apuestasBtn) {
+          apuestasBtn.addEventListener("click", () => {
+            window.location.href = "bets.html";
+          });
+        }
+      });
     </script>
 
     <script
@@ -247,26 +186,5 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-      import { firebaseConfig } from "./firebaseConfig.js";
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // Make auth and db available globally
-      window.auth = auth;
-      window.db = db;
-    </script>
-
-    <!-- Custom JS -->
-    <script type="module" src="players.js"></script>
-    <script type="module" src="tournamentManagment.js"></script>
-    <script type="module" src="fetchPlayers.js"></script>
   </body>
 </html>

@@ -88,11 +88,13 @@
       import {
         getFirestore,
         getDoc,
-        doc,
         collection,
         getDocs,
         query,
         where,
+        doc,
+        setDoc,
+        writeBatch,
       } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
       import { firebaseConfig } from "./firebaseConfig.js";
 
@@ -239,6 +241,181 @@
           betsList.innerHTML =
             "<li class='list-group-item text-danger'>Failed to load data</li>";
         }
+      };
+
+      const clasification_cuartos_buttos =
+        document.getElementById("generateCuartosBtn");
+      clasification_cuartos_buttos.addEventListener("click", async () => {
+        const activeTournament = await getActiveTournamentId();
+        if (!activeTournament) {
+          console.error("No active tournament found.");
+          return;
+        }
+        await processClasificacionCuartos(activeTournament);
+        console.log("Clasificacion Cuartos generated successfully.");
+      });
+
+      const processClasificacionCuartos = async (tournamentId) => {
+        // Fetch all players in I_Cuartos
+        console.log("Fetching players from I_Cuartos...");
+        const cuartosCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Cuartos"
+        );
+
+        const cuartosSnapshot = await getDocs(cuartosCollection);
+        const cuartosPlayers = cuartosSnapshot.docs.map(
+          (doc) => doc.data().id_player
+        );
+
+        // Fetch all users in I_Apuestas
+        console.log("Fetching all users from I_Apuestas...");
+        const apuestasCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Apuestas"
+        );
+        const apuestasSnapshot = await getDocs(apuestasCollection);
+
+        // Prepare the I_Clasificacion_Cuartos collection
+        const clasificacionCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Clasificacion_Cuartos"
+        );
+        const batch = writeBatch(db);
+
+        for (const apuestaDoc of apuestasSnapshot.docs) {
+          const apuestaData = apuestaDoc.data();
+          const matchingPlayers = [];
+
+          // Fetch the user's name
+          const userName = await getUserNameById(apuestaDoc.id);
+
+          // Check how many of the players in this user's bet are in I_Cuartos
+          for (let i = 1; i <= 8; i++) {
+            const playerId = apuestaData[`player${i}`];
+
+            if (cuartosPlayers.includes(playerId)) {
+              // Fetch the player's name
+              const playerName = await getPlayerNameById(
+                playerId,
+                tournamentId
+              );
+
+              matchingPlayers.push({ playerId, playerName });
+            }
+          }
+
+          // If there are at least two matching players, add them to I_Clasificacion_Cuartos
+          if (matchingPlayers.length >= 2) {
+            const clasificacionDocRef = doc(
+              clasificacionCollection,
+              apuestaDoc.id
+            ); // Using userId as the document ID
+            batch.set(clasificacionDocRef, {
+              userId: apuestaDoc.id,
+              userName: userName,
+              players: matchingPlayers, // Array of objects with playerId and playerName
+            });
+          } else {
+          }
+        }
+
+        // Commit the batch operation
+
+        await batch.commit();
+      };
+
+      const clasification_semis_buttos =
+        document.getElementById("generateSemisBtn");
+      clasification_semis_buttos.addEventListener("click", async () => {
+        const activeTournament = await getActiveTournamentId();
+        if (!activeTournament) {
+          console.error("No active tournament found.");
+          return;
+        }
+        await processClasificacionSemis(activeTournament);
+        console.log("Clasificacion Semis generated successfully.");
+      });
+
+      const processClasificacionSemis = async (tournamentId) => {
+        // Fetch all players in I_Semifinales
+        console.log("Fetching players from I_Semifinales...");
+        const semisCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Semifinales"
+        );
+
+        const semisSnapshot = await getDocs(semisCollection);
+        const semisPlayers = semisSnapshot.docs.map(
+          (doc) => doc.data().id_player
+        );
+
+        // Fetch all users in I_Apuestas
+        console.log("Fetching all users from I_Apuestas...");
+        const apuestasCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Apuestas"
+        );
+        const apuestasSnapshot = await getDocs(apuestasCollection);
+
+        // Prepare the I_Clasificacion_Semis collection
+        const clasificacionSemisCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Clasificacion_Semis"
+        );
+        const batch = writeBatch(db);
+
+        for (const apuestaDoc of apuestasSnapshot.docs) {
+          const apuestaData = apuestaDoc.data();
+          const matchingPlayers = [];
+
+          // Fetch the user's name
+          const userName = await getUserNameById(apuestaDoc.id);
+
+          // Check how many of the players in this user's bet are in I_Semifinales
+          for (let i = 1; i <= 8; i++) {
+            const playerId = apuestaData[`player${i}`];
+
+            if (semisPlayers.includes(playerId)) {
+              // Fetch the player's name
+              const playerName = await getPlayerNameById(
+                playerId,
+                tournamentId
+              );
+
+              matchingPlayers.push({ playerId, playerName });
+            }
+          }
+
+          // If there is at least one matching player, add them to I_Clasificacion_Semis
+          if (matchingPlayers.length >= 1) {
+            const clasificacionDocRef = doc(
+              clasificacionSemisCollection,
+              apuestaDoc.id
+            ); // Using userId as the document ID
+            batch.set(clasificacionDocRef, {
+              userId: apuestaDoc.id,
+              userName: userName,
+              players: matchingPlayers, // Array of objects with playerId and playerName
+            });
+          }
+        }
+
+        // Commit the batch operation
+        await batch.commit();
+        console.log("Clasificacion Semis processing completed.");
       };
 
       // Fetch bets data on page load

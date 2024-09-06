@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
         finish_date: endDate,
         logo: urlImage,
         activo: activo,
+        active_bracket: "",
+        apuestas: 0,
       };
 
       try {
