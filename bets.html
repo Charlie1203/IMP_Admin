@@ -331,9 +331,9 @@
         await batch.commit();
       };
 
-      const clasification_semis_buttos =
+      const clasification_semis_button =
         document.getElementById("generateSemisBtn");
-      clasification_semis_buttos.addEventListener("click", async () => {
+      clasification_semis_button.addEventListener("click", async () => {
         const activeTournament = await getActiveTournamentId();
         if (!activeTournament) {
           console.error("No active tournament found.");
@@ -416,6 +416,97 @@
         // Commit the batch operation
         await batch.commit();
         console.log("Clasificacion Semis processing completed.");
+      };
+
+      const resultados_apostadores_button =
+        document.getElementById("generateResultsBtn");
+      resultados_apostadores_button.addEventListener("click", async () => {
+        const activeTournament = await getActiveTournamentId();
+        if (!activeTournament) {
+          console.error("No active tournament found.");
+          return;
+        }
+        await processResultadosApuestas(activeTournament);
+        console.log("Resultados apuestas processed");
+      });
+
+      const processResultadosApuestas = async (tournamentId) => {
+        // Fetch the final results (1st to 4th place) from I_Resultados
+        console.log("Fetching final results from I_Resultados...");
+        const resultadosCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Resultados"
+        );
+        const resultadosSnapshot = await getDocs(resultadosCollection);
+
+        // Initialize a map to keep track of vote counts for each position (1 to 4)
+        const voteCounts = {
+          1: { id_player: null, name: null, vote_count: 0 },
+          2: { id_player: null, name: null, vote_count: 0 },
+          3: { id_player: null, name: null, vote_count: 0 },
+          4: { id_player: null, name: null, vote_count: 0 },
+        };
+
+        // Populate the map with player info from I_Resultados
+        for (const doc of resultadosSnapshot.docs) {
+          const { id_player, name, orden } = doc.data();
+          if (orden >= 1 && orden <= 4) {
+            voteCounts[orden].id_player = id_player;
+            voteCounts[orden].name = name;
+          }
+        }
+
+        // Fetch all user bets from I_Semifinales
+        console.log("Fetching user bets from I_Semifinales...");
+        const semifinalesCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Clasificacion_Semis"
+        );
+        const semifinalesSnapshot = await getDocs(semifinalesCollection);
+
+        // Iterate through each user's bet to count votes for 1st to 4th place players
+        for (const betDoc of semifinalesSnapshot.docs) {
+          const { players } = betDoc.data();
+
+          // Check if the user's bet matches any of the top 4 players
+          for (const player of players) {
+            for (let orden = 1; orden <= 4; orden++) {
+              if (player.playerId === voteCounts[orden].id_player) {
+                voteCounts[orden].vote_count += 1;
+                break; // Once the player is found, no need to check further
+              }
+            }
+          }
+        }
+
+        // Prepare to create the I_Resultados_Apuestas collection
+        console.log("Creating I_Resultados_Apuestas...");
+        const resultadosApuestasCollection = collection(
+          db,
+          "I_Torneos",
+          tournamentId,
+          "I_Resultados_Apuestas"
+        );
+        const batch = writeBatch(db);
+
+        // Create documents for each position (1st to 4th place) in the I_Resultados_Apuestas collection
+        for (let orden = 1; orden <= 4; orden++) {
+          const docRef = doc(resultadosApuestasCollection, `player_${orden}`);
+          batch.set(docRef, {
+            orden: orden,
+            id_player: voteCounts[orden].id_player,
+            name: voteCounts[orden].name,
+            vote_count: voteCounts[orden].vote_count,
+          });
+        }
+
+        // Commit the batch operation to Firestore
+        await batch.commit();
+        console.log("Resultados Apuestas processing completed.");
       };
 
       // Fetch bets data on page load
