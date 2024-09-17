@@ -48,10 +48,10 @@
       </div>
     </div>
 
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
       <div class="row">
         <div class="col-12 text-center">
-          <h1>Apostadores</h1>
+          <h1 class="mb-5">Panel de Apuestas</h1>
 
           <!-- Buttons row -->
           <div class="d-flex justify-content-center mb-4">
@@ -78,7 +78,72 @@
             </button>
           </div>
 
+          <div class="d-flex justify-content-center mb-5">
+            <button
+              class="btn btn-info mx-2"
+              id="fetchPlayersBtn"
+              style="background-color: lightslategrey"
+            >
+              Ver Detalles de Apuestas
+            </button>
+            <button
+              class="btn btn-info mx-2"
+              id="fetchBetsBtn"
+              style="background-color: lightslategrey"
+            >
+              Ver Apostadores
+            </button>
+          </div>
+
           <ul id="betsList" class="list-group mt-4"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Bet Details -->
+    <div
+      class="modal fade"
+      id="betDetailsModal"
+      tabindex="-1"
+      aria-labelledby="betDetailsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="betDetailsModalLabel">
+              Detalles de Apuestas
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Total numero de apostadores:
+              <span id="totalApuestas">Cargando...</span>
+            </p>
+            <p>
+              Total apostadores clasificados a cuartos:
+              <span id="totalCuartos">Cargando...</span>
+            </p>
+            <p>
+              Total apostadores clasificados a semis:
+              <span id="totalSemis">Cargando...</span>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -101,6 +166,90 @@
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+
+      const countApuestasDocuments = async (tournamentId) => {
+        try {
+          // Reference to the I_Apuestas collection
+          const apuestasCollection = collection(
+            db,
+            "I_Torneos",
+            tournamentId,
+            "I_Apuestas"
+          );
+
+          const apuestasSnapshot = await getDocs(apuestasCollection);
+
+          if (apuestasSnapshot.empty) {
+            return 0;
+          }
+
+          return apuestasSnapshot.size;
+        } catch (error) {
+          //console.error("Error fetching apuestas documents:", error);
+          return 0;
+        }
+      };
+
+      const countClasificacionCuartosDocuments = async (tournamentId) => {
+        console.log("Reached");
+        console.log(tournamentId);
+        try {
+          // Reference to the I_Clasificacion_Cuartos collection
+          const cuartosCollection = collection(
+            db,
+            "I_Torneos",
+            tournamentId,
+            "I_Clasificacion_Cuartos"
+          );
+
+          console.log("Reached");
+
+          // Fetch all documents in the collection
+          const cuartosSnapshot = await getDocs(cuartosCollection);
+
+          // If the collection exists but is empty, return 0
+          if (cuartosSnapshot.empty) {
+            return 0;
+          }
+
+          // Return the document count
+          return cuartosSnapshot.size;
+        } catch (error) {
+          console.error(
+            "Error fetching clasificacion cuartos documents:",
+            error
+          );
+          // Return 0 if the collection doesn't exist or any other error occurs
+          return 0;
+        }
+      };
+
+      const countClasificacionSemisDocuments = async (tournamentId) => {
+        try {
+          // Reference to the I_Clasificacion_Semis collection
+          const semisCollection = collection(
+            db,
+            "I_Torneos",
+            tournamentId,
+            "I_Clasificacion_Semis"
+          );
+
+          // Fetch all documents in the collection
+          const semisSnapshot = await getDocs(semisCollection);
+
+          // If the collection exists but is empty, return 0
+          if (semisSnapshot.empty) {
+            return 0;
+          }
+
+          // Return the document count
+          return semisSnapshot.size;
+        } catch (error) {
+          console.error("Error fetching clasificacion semis documents:", error);
+          // Return 0 if the collection doesn't exist or any other error occurs
+          return 0;
+        }
+      };
 
       // Function to get the active tournament ID
       const getActiveTournamentId = async () => {
@@ -430,6 +579,46 @@
         console.log("Resultados apuestas processed");
       });
 
+      document
+        .getElementById("fetchPlayersBtn")
+        .addEventListener("click", async () => {
+          const modal = new bootstrap.Modal(
+            document.getElementById("betDetailsModal")
+          );
+
+          await updateBetDetailsModal();
+
+          modal.show(); // Show the modal
+        });
+
+      // Function to update the modal with bet details
+      const updateBetDetailsModal = async () => {
+        const tournamentId = await getActiveTournamentId();
+
+        if (!tournamentId) {
+          console.error("No active tournament found.");
+          return;
+        }
+
+        try {
+          // Get the counts
+          const totalApuestas = await countApuestasDocuments(tournamentId);
+          const totalCuartos = await countClasificacionCuartosDocuments(
+            tournamentId
+          );
+          const totalSemis = await countClasificacionSemisDocuments(
+            tournamentId
+          );
+
+          // Update the modal content
+          document.getElementById("totalApuestas").innerText = totalApuestas;
+          document.getElementById("totalCuartos").innerText = totalCuartos;
+          document.getElementById("totalSemis").innerText = totalSemis;
+        } catch (error) {
+          console.error("Error updating bet details modal:", error);
+        }
+      };
+
       const processResultadosApuestas = async (tournamentId) => {
         // Fetch the final results (1st to 4th place) from I_Resultados
         console.log("Fetching final results from I_Resultados...");
@@ -509,8 +698,10 @@
         console.log("Resultados Apuestas processing completed.");
       };
 
-      // Fetch bets data on page load
-      fetchBets();
+      const fetchBetsButton = document.getElementById("fetchBetsBtn");
+      fetchBetsButton.addEventListener("click", async () => {
+        await fetchBets();
+      });
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
