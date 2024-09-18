@@ -25,19 +25,11 @@
           <span id="tournamentName">Loading...</span>
 
           <div style="display: flex" class="mt-5">
-            <button
-              class="btn btn-primary w-50 mx-2"
-              onclick="handleModal('modalCuartos')"
-              id="I_Cuartos"
-            >
+            <button class="btn btn-primary w-50 mx-2" id="I_Cuartos">
               Cargar jugadores a Cuartos
             </button>
 
-            <button
-              class="btn btn-secondary w-50 mx-2"
-              onclick="handleModal('brackets')"
-              id="handleGames"
-            >
+            <button class="btn btn-secondary w-50 mx-2" id="handleGames">
               Manejar partidos
             </button>
           </div>
@@ -60,6 +52,91 @@
           </button>
         </div>
         <div class="col-12 col-lg-3"></div>
+      </div>
+    </div>
+
+    <!-- MODAL CUARTOS -->
+    <div class="container-fluid modalCont" id="modalCuartos">
+      <div class="row modalBox">
+        <div class="col-12 text-center mt-3">
+          <h1>Cargar Jugadores</h1>
+        </div>
+        <div class="col-6">
+          <p class="mb-0 mt-3">Jugador 1</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player1"
+          />
+          <p class="mb-0 mt-3">Jugador 2</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player2"
+          />
+          <p class="mb-0 mt-3">Jugador 3</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player3"
+          />
+          <p class="mb-0 mt-3">Jugador 4</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player4"
+          />
+        </div>
+        <div class="col-6">
+          <p class="mb-0 mt-3">Jugador 5</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player5"
+          />
+          <p class="mb-0 mt-3">Jugador 6</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player6"
+          />
+          <p class="mb-0 mt-3">Jugador 7</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player7"
+          />
+          <p class="mb-0 mt-3">Jugador 8</p>
+          <input
+            style="cursor: pointer"
+            class="w-100 px-2"
+            type="text"
+            id="cuartos_player8"
+          />
+        </div>
+        <div class="col-12 text-center">
+          <div style="display: flex; margin-bottom: 1em">
+            <button
+              id="cuartos_finishButton"
+              class="w-25 mt-4 btn w-50 mx-2 btn-primary"
+            >
+              Cargar Jugadores
+            </button>
+            <button
+              id="closeButton"
+              class="w-25 mt-4 w-50 mx-2 btn btn-secondary"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -104,10 +181,15 @@
       // Define handleModal
       let handleModal = (id) => {
         let modal = document.getElementById(id);
-        if (getComputedStyle(modal).display === "none") {
-          modal.style.display = "block";
+        if (modal) {
+          // Check if the modal exists
+          if (getComputedStyle(modal).display === "none") {
+            modal.style.display = "block";
+          } else {
+            modal.style.display = "none";
+          }
         } else {
-          modal.style.display = "none";
+          console.error(`Element with ID '${id}' not found`);
         }
       };
 
@@ -117,6 +199,27 @@
         const activarApuestasBtn = document.getElementById("activarApuestas");
         if (activarApuestasBtn) {
           activarApuestasBtn.addEventListener("click", activarApuestas);
+        }
+
+        const i_cuartosButton = document.getElementById("I_Cuartos");
+        if (i_cuartosButton) {
+          i_cuartosButton.addEventListener("click", () =>
+            handleModal("modalCuartos")
+          );
+        }
+
+        const handleGamesBtn = document.getElementById("handleGames");
+        if (handleGamesBtn) {
+          handleGamesBtn.addEventListener("click", () =>
+            handleModal("modalActivarBracket")
+          );
+        }
+
+        const closeButton = document.getElementById("closeButton");
+        if (closeButton) {
+          closeButton.addEventListener("click", () =>
+            handleModal("modalCuartos")
+          );
         }
 
         const desactivarApuestasBtn =

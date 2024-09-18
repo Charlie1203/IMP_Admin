@@ -123,7 +123,7 @@
           </div>
           <div class="modal-body">
             <p>
-              Total numero de apostadores:
+              Total número de apostadores:
               <span id="totalApuestas">Cargando...</span>
             </p>
             <p>
@@ -134,6 +134,16 @@
               Total apostadores clasificados a semis:
               <span id="totalSemis">Cargando...</span>
             </p>
+
+            <!-- Section to display the players, bet counts, and prize pool percentages -->
+            <div id="playerNames">
+              <!-- This will be dynamically filled by the updateBetDetailsModal function -->
+            </div>
+
+            <!-- Section to show the prize pool percentage for each player -->
+            <div id="prizePoolDistribution">
+              <!-- This will be dynamically filled by the updateBetDetailsModal function -->
+            </div>
           </div>
           <div class="modal-footer">
             <button
@@ -220,6 +230,69 @@
             error
           );
           // Return 0 if the collection doesn't exist or any other error occurs
+          return 0;
+        }
+      };
+
+      const getResultados = async (tournamentId) => {
+        try {
+          const resultadosCollection = collection(
+            db,
+            "I_Torneos",
+            tournamentId,
+            "I_Resultados"
+          );
+
+          const resultadosSnapshot = await getDocs(resultadosCollection);
+
+          const resultados = [];
+
+          resultadosSnapshot.forEach((doc) => {
+            const data = doc.data();
+            resultados.push({
+              name: data.name,
+              id_player: data.id_player, // Include id_player in the result
+              orden: data.orden,
+            });
+          });
+
+          // Sort by 'orden'
+          resultados.sort((a, b) => a.orden - b.orden);
+
+          // Return the full objects (name and id_player) sorted by 'orden'
+          return resultados;
+        } catch (error) {
+          console.error("Error fetching resultados: ", error);
+          return [];
+        }
+      };
+
+      const countBetsForPlayer = async (tournamentId, playerId) => {
+        console.log("Called");
+        try {
+          // Reference to the I_Clasificacion_Semis collection
+          const semisCollection = collection(
+            db,
+            "I_Torneos",
+            tournamentId,
+            "I_Clasificacion_Semis"
+          );
+
+          const semisSnapshot = await getDocs(semisCollection);
+          let playerBetCount = 0;
+
+          for (const betDoc of semisSnapshot.docs) {
+            const { players } = betDoc.data(); // Players array contains playerId and playerName
+
+            // Check if the playerId is in the user's bet
+            if (players.some((player) => player.playerId === playerId)) {
+              playerBetCount += 1; // Increment the count if the player is found
+            }
+          }
+
+          return playerBetCount;
+        } catch (error) {
+          console.error("Error counting bets for player:", error);
           return 0;
         }
       };
@@ -591,7 +664,7 @@
           modal.show(); // Show the modal
         });
 
-      // Function to update the modal with bet details
+      // Function to update the modal with bet details and prize distribution
       const updateBetDetailsModal = async () => {
         const tournamentId = await getActiveTournamentId();
 
@@ -601,7 +674,7 @@
         }
 
         try {
-          // Get the counts
+          // Get the counts for apuestas, cuartos, and semis
           const totalApuestas = await countApuestasDocuments(tournamentId);
           const totalCuartos = await countClasificacionCuartosDocuments(
             tournamentId
@@ -610,10 +683,54 @@
             tournamentId
           );
 
-          // Update the modal content
+          // Get the player names and ids from I_Resultados
+          const resultados = await getResultados(tournamentId);
+
+          // Calculate total number of users who bet on each player
+          const playerBets = [];
+          for (const player of resultados) {
+            const betsForPlayer = await countBetsForPlayer(
+              tournamentId,
+              player.id_player
+            );
+            playerBets.push({ name: player.name, bets: betsForPlayer });
+          }
+
+          // Update the modal content for the total counts
           document.getElementById("totalApuestas").innerText = totalApuestas;
           document.getElementById("totalCuartos").innerText = totalCuartos;
           document.getElementById("totalSemis").innerText = totalSemis;
+
+          // Update the modal content for the player names and bets
+          const playerNamesElement = document.getElementById("playerNames");
+          if (resultados.length > 0) {
+            playerNamesElement.innerHTML = resultados
+              .map(
+                (player, index) =>
+                  `<p>${index + 1}. ${player.name} - Total Bets: ${
+                    playerBets[index].bets
+                  }</p>`
+              )
+              .join("");
+          } else {
+            playerNamesElement.innerHTML = "<p>No player data available.</p>";
+          }
+
+          // Calculate prize pool distribution
+          const prizePool = 80; // 80% of the total pool is distributed
+          const distribution = [50, 30, 15, 5]; // Percentages for each player
+
+          const prizePoolDistributionElement = document.getElementById(
+            "prizePoolDistribution"
+          );
+          prizePoolDistributionElement.innerHTML = playerBets
+            .map((player, index) => {
+              const poolShare = (distribution[index] * prizePool) / 100;
+              return `<p>${player.name}: ${
+                distribution[index]
+              }% (${poolShare.toFixed(2)}% of the prize pool)</p>`;
+            })
+            .join("");
         } catch (error) {
           console.error("Error updating bet details modal:", error);
         }
