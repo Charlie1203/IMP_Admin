@@ -725,10 +725,22 @@
           );
           prizePoolDistributionElement.innerHTML = playerBets
             .map((player, index) => {
+              const totalBetsForPlayer = player.bets;
               const poolShare = (distribution[index] * prizePool) / 100;
+              let individualSharePercentage = 0;
+
+              // If there are bets for the player, calculate individual share
+              if (totalBetsForPlayer > 0) {
+                individualSharePercentage = poolShare / totalBetsForPlayer;
+              }
+
               return `<p>${player.name}: ${
                 distribution[index]
-              }% (${poolShare.toFixed(2)}% of the prize pool)</p>`;
+              }% Del prize pool (${poolShare.toFixed(
+                2
+              )}%) - A cada usuario le corresponde ${individualSharePercentage.toFixed(
+                2
+              )}% Del prize pool</p>`;
             })
             .join("");
         } catch (error) {

@@ -140,6 +140,37 @@
       </div>
     </div>
 
+
+    <!-- MODAL LISTA DE JUGADORES -->
+    <div class="container-fluid modalCont" id="modalPlayers">
+      <div class="row modalBox">
+        <div class="col-12 text-center">
+          <h1 class="mt-3">Lista de Jugadores</h1>
+        </div>
+        <div class="col-12 text-center">
+          <input
+            type="text"
+            id="searchPlayerInput"
+            placeholder="Buscar jugador..."
+            class="w-50 mt-2 mb-3"
+          />
+        </div>
+        <div class="col-lg-3 col-12"></div>
+        <div class="col-lg-6 col-12 players-container">
+          <ul id="playersList"></ul>
+        </div>
+        <div class="col-lg-3 col-12"></div>
+        <div class="col-12 text-center">
+          <button
+            id="closePlayersButton"
+            class="w-25 mt-4 btn btn-primary w-75"
+          >
+            Cerrar
+        </div>
+        <div class="col-12 col-lg-3"></div>
+      </div>
+    </div>
+
     <!-- MODAL ACTIVAR BRACKET -->
     <div class="container-fluid modalCont" id="modalActivarBracket">
       <div class="row modalBox">
@@ -222,6 +253,13 @@
           );
         }
 
+        const closePlayersButton = document.getElementById("closePlayersButton");
+        if (closePlayersButton) {
+          closePlayersButton.addEventListener("click", () =>
+            handleModal("modalPlayers")
+          );
+        }
+
         const desactivarApuestasBtn =
           document.getElementById("desactivarApuestas");
         if (desactivarApuestasBtn) {
@@ -291,3 +329,4 @@
     ></script>
   </body>
 </html>
+

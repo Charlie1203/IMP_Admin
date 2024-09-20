@@ -135,8 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create the I_Resultados collection
         createResults();
 
-        createEmptyCollection("I_Clasificacion_Cuartos");
-        createEmptyCollection("I_Clasificacion_Semis");
+        // createEmptyCollection("I_Clasificacion_Cuartos");
+        // createEmptyCollection("I_Clasificacion_Semis");
 
         await batch.commit();
 
