@@ -19,6 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const startDate = document.getElementById("startDate").value;
       const endDate = document.getElementById("endDate").value;
       const urlImage = document.getElementById("urlImage").value;
+      const minimoJugadoresApuestas = parseInt(
+        document.getElementById("cantidadJugadores").value,
+        10
+      );
+      const minimoJugadoresClasificacion = parseInt(
+        document.getElementById("minimoJugadores").value,
+        10
+      );
       const activo = parseInt(document.getElementById("activo").value, 10);
 
       if (
@@ -27,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
         !startDate ||
         !endDate ||
         !urlImage ||
+        !minimoJugadoresApuestas ||
+        !minimoJugadoresClasificacion ||
         !activo
       ) {
         alert("All fields are required!");
@@ -38,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
         start_date: startDate,
         finish_date: endDate,
         logo: urlImage,
+        minimoApuestas: minimoJugadoresApuestas,
+        minimoClasificacion: minimoJugadoresClasificacion,
         activo: activo,
         active_bracket: "",
         apuestas: 0,
