@@ -231,8 +231,6 @@ async function handleCuartosButtonClick() {
 
   await batch.commit();
   console.log("Players updated in I_Cuartos collection");
-
-  //await processClasificacionCuartos(tournamentId);
 }
 
 // async function processClasificacionCuartos(tournamentId) {

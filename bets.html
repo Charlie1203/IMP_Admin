@@ -404,6 +404,56 @@
         }
       };
 
+      /**
+       * parameters: tournament ID
+       * Returns the field minimoClasificacion from the tournament document
+       **/
+      const minimumClassificationPlayers = async (tournamentId) => {
+        try {
+          const tournamentDocRef = doc(db, "I_Torneos", tournamentId);
+
+          const tournamentDoc = await getDoc(tournamentDocRef);
+
+          if (tournamentDoc.exists()) {
+            const data = tournamentDoc.data();
+            const minimoClasificaion = data.minimoClasificacion;
+            return minimoClasificaion;
+          } else {
+            console.error(
+              "No such document found when looking for minimum classification players"
+            );
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching minimum classification players");
+          throw error;
+        }
+      };
+
+      /**
+       *  Parameters: Tournament Id
+       *  Returns the field minimoApuestas from the tournament Document
+       */
+      const getNumberPlayersBet = async (tournamentId) => {
+        try {
+          const tournamentDocRef = doc(db, "I_Torneos", tournamentId);
+          const tournamentDoc = await getDoc(tournamentDocRef);
+
+          if (tournamentDoc.exists()) {
+            const data = tournamentDoc.data();
+            const minimoApuestas = data.minimoApuestas;
+
+            return minimoApuestas;
+          } else {
+            console.error("No such document");
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching minimoApuestas field");
+          throw error;
+        }
+      };
+
       // Function to fetch and display bets data
       const fetchBets = async () => {
         const betsList = document.getElementById("betsList");
@@ -473,11 +523,36 @@
           console.error("No active tournament found.");
           return;
         }
-        await processClasificacionCuartos(activeTournament);
+
+        const minimoClasificacion = await minimumClassificationPlayers(
+          activeTournament
+        );
+
+        if (!minimoClasificacion) {
+          console.error("No minimum classification players found.");
+          return;
+        }
+
+        const minimoApuestas = await getNumberPlayersBet(activeTournament);
+
+        if (!minimoApuestas) {
+          console.error("No minimum number of bets found.");
+          return;
+        }
+
+        await processClasificacionCuartos(
+          activeTournament,
+          minimoApuestas,
+          minimoClasificacion
+        );
         console.log("Clasificacion Cuartos generated successfully.");
       });
 
-      const processClasificacionCuartos = async (tournamentId) => {
+      const processClasificacionCuartos = async (
+        tournamentId,
+        minimoApuestas,
+        minimoClasificacion
+      ) => {
         // Fetch all players in I_Cuartos
         console.log("Fetching players from I_Cuartos...");
         const cuartosCollection = collection(
@@ -519,7 +594,7 @@
           const userName = await getUserNameById(apuestaDoc.id);
 
           // Check how many of the players in this user's bet are in I_Cuartos
-          for (let i = 1; i <= 8; i++) {
+          for (let i = 1; i <= minimoApuestas; i++) {
             const playerId = apuestaData[`player${i}`];
 
             if (cuartosPlayers.includes(playerId)) {
@@ -534,7 +609,7 @@
           }
 
           // If there are at least two matching players, add them to I_Clasificacion_Cuartos
-          if (matchingPlayers.length >= 2) {
+          if (matchingPlayers.length >= minimoClasificacion) {
             const clasificacionDocRef = doc(
               clasificacionCollection,
               apuestaDoc.id

@@ -55,6 +55,54 @@
       </div>
     </div>
 
+    <!-- MODAL BRACKETS -->
+		<div class="container-fluid modalCont" id="brackets">
+			<div class="row modalBox">
+				<div class="col-12 text-center">
+					<h1 class="mt-5">Selecciona la bracket</h1>
+				</div>
+				<div class="col-12 text-center">
+					<button id="cuartosScore" class="w-50 py-2 mt-0 mb-0">
+						Cuartos de final
+					</button>
+				</div>
+				<div class="col-12 text-center">
+					<button id="semisScore" class="w-50 py-2 mt-0 mb-0">Semifinales</button>
+				</div>
+
+				<div class="col-12 text-center">
+					<button id="tercerCuartoScore" class="w-50 py-2 mt-0 mb-0">
+						Final Perdedores
+					</button>
+				</div>
+
+				<div class="col-12 text-center">
+					<button id="finalesScore" class="w-50 py-2 mt-0 mb-0">
+						Final Ganadores
+					</button>
+				</div>
+
+				<div class="col-12 text-center">
+					<div style="display: flex">
+						<button
+							id="cuartos_finishButton"
+							class="w-25 mt-4 btn btn-primary mx-2 w-50"
+						>
+							Cargar Jugadores
+						</button>
+						<button
+							id="closeButtonScore"
+							class="w-25 mt-4 btn btn-secondary mx-2 w-50"
+						>
+							Cerrar
+						</button>
+					</div>
+	
+				</div>
+			</div>
+		</div>
+
+
     <!-- MODAL CUARTOS -->
     <div class="container-fluid modalCont" id="modalCuartos">
       <div class="row modalBox">
@@ -232,6 +280,7 @@
           activarApuestasBtn.addEventListener("click", activarApuestas);
         }
 
+
         const i_cuartosButton = document.getElementById("I_Cuartos");
         if (i_cuartosButton) {
           i_cuartosButton.addEventListener("click", () =>
@@ -242,8 +291,13 @@
         const handleGamesBtn = document.getElementById("handleGames");
         if (handleGamesBtn) {
           handleGamesBtn.addEventListener("click", () =>
-            handleModal("modalActivarBracket")
+            handleModal("brackets")
           );
+        }
+
+        const closeButtonScore = document.getElementById("closeButtonScore");
+        if (closeButtonScore) {
+          closeButtonScore.addEventListener("click", () => handleModal("brackets"));
         }
 
         const closeButton = document.getElementById("closeButton");
@@ -314,7 +368,31 @@
             window.location.href = "bets.html";
           });
         }
+
       });
+    </script>
+
+    <script>
+              document.getElementById("cuartosScore").addEventListener("click", () => {
+        window.location.href = "quarterFinals.html";
+      });
+
+      document.getElementById("semisScore").addEventListener("click", () => {
+        window.location.href = "semiFinals.html";
+      });
+
+      document.getElementById("finalesScore").addEventListener("click", () => {
+        window.location.href = "finales.html";
+      });
+
+      document.getElementById("tercerCuartoScore").addEventListener("click", () => {
+        window.location.href = "tercerCuarto.html";
+      });
+
+      document.getElementById("apuestasScore").addEventListener("click", () => {
+        window.location.href = "bets.html";
+      });
+
     </script>
 
     <script

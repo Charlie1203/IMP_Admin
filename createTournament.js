@@ -7,7 +7,7 @@ import {
   where,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-import { getPlayers } from "./players.js"; // Assuming getPlayers is exported from players.js
+import { getPlayers } from "./players.js";
 import { v4 as uuidv4 } from "https://jspm.dev/uuid"; // Import UUID function
 
 document.addEventListener("DOMContentLoaded", function () {
