@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             name: player.name,
             rank: player.rank,
             id_player: uuidv4(),
+            apuestas: 0,
           });
         });
 

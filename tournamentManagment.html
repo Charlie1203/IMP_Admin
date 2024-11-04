@@ -373,25 +373,46 @@
     </script>
 
     <script>
-              document.getElementById("cuartosScore").addEventListener("click", () => {
-        window.location.href = "quarterFinals.html";
-      });
 
-      document.getElementById("semisScore").addEventListener("click", () => {
-        window.location.href = "semiFinals.html";
-      });
+        if (document.getElementById("cuartosScore") != null) {
+          document.getElementById("cuartosScore").addEventListener("click", () => {
+            window.location.href = "quarterFinals.html";
+          });
+        }
 
-      document.getElementById("finalesScore").addEventListener("click", () => {
-        window.location.href = "finales.html";
-      });
+        if (document.getElementById("semisScore") != null) {
+          document.getElementById("semisScore").addEventListener("click", () => {
+            window.location.href = "semiFinals.html";
+          });
+        }
 
-      document.getElementById("tercerCuartoScore").addEventListener("click", () => {
-        window.location.href = "tercerCuarto.html";
-      });
+        if (document.getElementById("finalesScore") != null) {
+          document.getElementById("finalesScore").addEventListener("click", () => {
+            window.location.href = "finales.html";
+          });
+        }
 
+        if (document.getElementById("tercerCuartoScore") != null) {
+          document.getElementById("tercerCuartoScore").addEventListener("click", () => {
+            window.location.href = "tercerCuarto.html";
+          });
+        }
+
+        document.getElementById("cuartos_finishButton").addEventListener("click", () => {
+          window.location.href = "quarterFinals.html";
+        });
+
+      if (document.getElementById("cuartos_finishButton") != null) {
+        document.getElementById("cuartos_finishButton").addEventListener("click", () => {
+          window.location.href = "quarterFinals.html";
+        });
+      }
+
+      if (document.getElementById("apuestasScore") != null) {
       document.getElementById("apuestasScore").addEventListener("click", () => {
         window.location.href = "bets.html";
       });
+    }
 
     </script>
 

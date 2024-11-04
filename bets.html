@@ -649,21 +649,20 @@
           tournamentId,
           "I_Semifinales"
         );
-
         const semisSnapshot = await getDocs(semisCollection);
         const semisPlayers = semisSnapshot.docs.map(
           (doc) => doc.data().id_player
         );
 
-        // Fetch all users in I_Apuestas
-        console.log("Fetching all users from I_Apuestas...");
-        const apuestasCollection = collection(
+        // Fetch all users in I_Clasificacion_Cuartos
+        console.log("Fetching all users from I_Clasificacion_Cuartos...");
+        const cuartosCollection = collection(
           db,
           "I_Torneos",
           tournamentId,
-          "I_Apuestas"
+          "I_Clasificacion_Cuartos"
         );
-        const apuestasSnapshot = await getDocs(apuestasCollection);
+        const cuartosSnapshot = await getDocs(cuartosCollection);
 
         // Prepare the I_Clasificacion_Semis collection
         const clasificacionSemisCollection = collection(
@@ -674,25 +673,22 @@
         );
         const batch = writeBatch(db);
 
-        for (const apuestaDoc of apuestasSnapshot.docs) {
-          const apuestaData = apuestaDoc.data();
+        for (const cuartosDoc of cuartosSnapshot.docs) {
+          const cuartosData = cuartosDoc.data();
           const matchingPlayers = [];
 
-          // Fetch the user's name
-          const userName = await getUserNameById(apuestaDoc.id);
+          // Fetch the user's name and ID from the cuartos document
+          const userName = cuartosData.userName; // Since userName is already in the cuartos document
+          const userId = cuartosData.userId; // Extract userId from the cuartos document
 
-          // Check how many of the players in this user's bet are in I_Semifinales
-          for (let i = 1; i <= 8; i++) {
-            const playerId = apuestaData[`player${i}`];
+          // Check how many of the players in this user's cuartos classification are in I_Semifinales
+          const playersInCuartos = cuartosData.players; // Array of players the user had in cuartos
+          for (const player of playersInCuartos) {
+            const playerId = player.playerId;
 
             if (semisPlayers.includes(playerId)) {
-              // Fetch the player's name
-              const playerName = await getPlayerNameById(
-                playerId,
-                tournamentId
-              );
-
-              matchingPlayers.push({ playerId, playerName });
+              // Add the player to the matching players list if they are in semifinals
+              matchingPlayers.push(player);
             }
           }
 
@@ -700,10 +696,10 @@
           if (matchingPlayers.length >= 1) {
             const clasificacionDocRef = doc(
               clasificacionSemisCollection,
-              apuestaDoc.id
+              userId
             ); // Using userId as the document ID
             batch.set(clasificacionDocRef, {
-              userId: apuestaDoc.id,
+              userId: userId,
               userName: userName,
               players: matchingPlayers, // Array of objects with playerId and playerName
             });
