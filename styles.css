@@ -39,7 +39,7 @@ li {
 }
 
 .modalBox {
-	background: rgb(226, 221, 221);
+	background-color: rgb(247, 235, 167);
 	width: 60%;
 	height: 80%;
 	position: absolute;
@@ -47,6 +47,7 @@ li {
 	border-radius: 2em;
 	left: 20%;
 	padding-left: 2em;
+	font-weight: 500;
 	padding-right: 2em;
 }
 

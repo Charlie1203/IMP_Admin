@@ -1,406 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cuartos de Final</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <link rel="stylesheet" href="styles.css" />
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-lg-3 col-12"></div>
-        <div class="col-lg-6 col-12 text-center">
-          <h1 class="mt-4">Cuartos de final</h1>
-          <button
-            onclick="handleModal('modal', 1)"
-            id="player_1"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 1
-          </button>
-          <button
-            onclick="handleModal('modal', 2)"
-            id="player_2"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 2
-          </button>
-          <button
-            onclick="handleModal('modal', 3)"
-            id="player_3"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 3
-          </button>
-          <button
-            onclick="handleModal('modal', 4)"
-            id="player_4"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 4
-          </button>
-          <button
-            onclick="handleModal('modal', 5)"
-            id="player_5"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 5
-          </button>
-          <button
-            onclick="handleModal('modal', 6)"
-            id="player_6"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 6
-          </button>
-          <button
-            onclick="handleModal('modal', 7)"
-            id="player_7"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 7
-          </button>
-          <button
-            onclick="handleModal('modal', 8)"
-            id="player_8"
-            class="btn btn-primary mt-3 w-50"
-          >
-            Player 8
-          </button>
-          <button
-            onclick="goBack('brackets')"
-            id="g_back"
-            class="btn btn-secondary mt-5 w-50"
-          >
-            Go back
-          </button>
-        </div>
-        <div class="col-lg-3 col-12"></div>
-      </div>
-    </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Cuartos de Final</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+	</head>
+	<body>
+		<link rel="stylesheet" href="styles.css" />
+		<div class="container mt-5">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h1 class="mt-4 mb-5">Cuartos de final</h1>
+				</div>
 
-    <!-- MODAL ALL PLAYERS -->
-    <div class="container-fluid modalCont" id="modal">
-      <div class="row modalBox">
-        <div class="col-12 text-center mt-3">Player 1</div>
-        <div class="col-4">
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 1:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 2:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 3:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 4:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 5:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 6:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-        </div>
-        <div class="col-4">
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 7:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 8:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 9:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 10:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 11:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 12:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-        </div>
-        <div class="col-4">
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 13:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 14:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 15:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 16:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 17:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-          <div style="display: flex; margin-top: 1em">
-            <p class="mx-2">Hoyo 18:</p>
-            <input
-              class="w-25 score-input"
-              style="height: 2rem"
-              type="text"
-              name=""
-            />
-          </div>
-        </div>
-        <div class="col-12 text-center">
-          <div style="display: flex; margin-bottom: 1em">
-            <button
-              onclick="storeScores()"
-              id="cargarScoreButtonCuartos"
-              class="w-25 mt-4 btn btn-primary mx-2 w-50"
-            >
-              Cargar Score
-            </button>
-            <button
-              onclick="handleModal('modal')"
-              id="closeButton"
-              class="w-25 mt-4 btn btn-secondary mx-2 w-50"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+				<div class="col-lg-2 col-12"></div>
+				<div class="col-lg-4 col-12 text-end">
+					<button
+						onclick="handleModal('modal', 1)"
+						id="player_1"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 1
+					</button>
+					<button
+						onclick="handleModal('modal', 2)"
+						id="player_2"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 2
+					</button>
+					<button
+						onclick="handleModal('modal', 3)"
+						id="player_3"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 3
+					</button>
+					<button
+						onclick="handleModal('modal', 4)"
+						id="player_4"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 4
+					</button>
+				</div>
+				<div class="col-lg-4 col-12 text-start">
+					<button
+						onclick="handleModal('modal', 5)"
+						id="player_5"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 5
+					</button>
+					<button
+						onclick="handleModal('modal', 6)"
+						id="player_6"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 6
+					</button>
+					<button
+						onclick="handleModal('modal', 7)"
+						id="player_7"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 7
+					</button>
+					<button
+						onclick="handleModal('modal', 8)"
+						id="player_8"
+						class="btn btn-primary mt-3 w-75"
+					>
+						Player 8
+					</button>
+				</div>
+				<div class="col-lg-2 col-12"></div>
+				<div class="col-12 text-center">
+					<button
+						onclick="goBack('brackets')"
+						id="g_back"
+						class="btn btn-secondary mt-5 w-50"
+					>
+						Go back
+					</button>
+				</div>
+			</div>
+		</div>
 
-    <script type="module" src="players.js"></script>
-    <script type="module" src="tournamentManagment.js"></script>
-    <script type="module" src="fetchPlayers.js"></script>
-    <script type="module" src="fetchScores.js"></script>
-    <script type="module" src="processScores.js"></script>
+		<!-- MODAL ALL PLAYERS -->
+		<div class="container-fluid modalCont" id="modal">
+			<div class="row modalBox">
+				<div class="col-12 text-center mt-3">Player 1</div>
+				<div class="col-4">
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 1:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 2:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 3:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 4:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 5:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 6:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+				</div>
+				<div class="col-4">
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 7:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 8:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 9:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 10:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 11:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 12:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+				</div>
+				<div class="col-4">
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 13:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 14:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 15:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 16:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 17:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+					<div style="display: flex; margin-top: 1em">
+						<p class="mx-2">Hoyo 18:</p>
+						<input
+							class="w-25 score-input"
+							style="height: 2rem"
+							type="text"
+							name=""
+						/>
+					</div>
+				</div>
+				<div class="col-12 text-center">
+					<div style="display: flex; margin-bottom: 1em">
+						<button
+							onclick="storeScores()"
+							id="cargarScoreButtonCuartos"
+							class="w-25 mt-4 btn btn-primary mx-2 w-50"
+						>
+							Cargar Score
+						</button>
+						<button
+							onclick="handleModal('modal')"
+							id="closeButton"
+							class="w-25 mt-4 btn btn-secondary mx-2 w-50"
+						>
+							Cerrar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <script>
-      let selectedPlayerNumber = null;
+		<script type="module" src="players.js"></script>
+		<script type="module" src="tournamentManagment.js"></script>
+		<script type="module" src="fetchPlayers.js"></script>
+		<script type="module" src="fetchScores.js"></script>
+		<script type="module" src="processScores.js"></script>
 
-      document.addEventListener("DOMContentLoaded", function () {
-        // Selecciona todos los inputs de puntuación
-        const inputs = document.querySelectorAll(".score-input");
-        const submitButton = document.getElementById(
-          "cargarScoreButtonCuartos"
-        );
+		<script>
+			let selectedPlayerNumber = null;
 
-        // Función para verificar si algún input tiene valor
-        function checkInputs() {
-          let hasValue = false;
-          inputs.forEach((input) => {
-            if (input.value.trim() !== "") {
-              hasValue = true;
-            }
-          });
+			document.addEventListener("DOMContentLoaded", function () {
+				// Selecciona todos los inputs de puntuación
+				const inputs = document.querySelectorAll(".score-input");
+				const submitButton = document.getElementById(
+					"cargarScoreButtonCuartos"
+				);
 
-          // Habilita o deshabilita el botón según haya un valor
-          submitButton.disabled = !hasValue;
-        }
+				// Función para verificar si algún input tiene valor
+				function checkInputs() {
+					let hasValue = false;
+					inputs.forEach((input) => {
+						if (input.value.trim() !== "") {
+							hasValue = true;
+						}
+					});
 
-        // Agrega un listener a cada input para detectar cambios
-        inputs.forEach((input) => {
-          input.addEventListener("input", checkInputs);
-        });
+					// Habilita o deshabilita el botón según haya un valor
+					submitButton.disabled = !hasValue;
+				}
 
-        // Inicialmente deshabilitar el botón
-        submitButton.disabled = true;
-      });
-    </script>
+				// Agrega un listener a cada input para detectar cambios
+				inputs.forEach((input) => {
+					input.addEventListener("input", checkInputs);
+				});
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-      import { firebaseConfig } from "./firebaseConfig.js";
-      import { fetchScoresForPlayer } from "./fetchScores.js";
-      import { collectScores } from "./processScores.js";
+				// Inicialmente deshabilitar el botón
+				submitButton.disabled = true;
+			});
+		</script>
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+			import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+			import { getFirestore } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+			import { firebaseConfig } from "./firebaseConfig.js";
+			import { fetchScoresForPlayer } from "./fetchScores.js";
+			import { collectScores } from "./processScores.js";
 
-      // Make auth and db available globally
-      window.auth = auth;
-      window.db = db;
+			// Initialize Firebase
+			const app = initializeApp(firebaseConfig);
+			const auth = getAuth(app);
+			const db = getFirestore(app);
 
-      let handleModal = (id, playerNumber) => {
-        let modal = document.getElementById(id);
-        let inputs = modal.querySelectorAll("input");
+			// Make auth and db available globally
+			window.auth = auth;
+			window.db = db;
 
-        // Check if the modal is currently hidden (meaning it will be opened)
-        if (modal.style.display === "none" || modal.style.display === "") {
-          selectedPlayerNumber = playerNumber;
+			let handleModal = (id, playerNumber) => {
+				let modal = document.getElementById(id);
+				let inputs = modal.querySelectorAll("input");
 
-          // Update the IDs of the inputs according to the selected player
-          inputs.forEach((input, index) => {
-            input.id = `h${index + 1}_player${playerNumber}`;
-          });
+				// Check if the modal is currently hidden (meaning it will be opened)
+				if (modal.style.display === "none" || modal.style.display === "") {
+					selectedPlayerNumber = playerNumber;
 
-          // Update the title of the modal to reflect the selected player
-          let title = modal.querySelector(".col-12.text-center");
-          title.textContent = `Player ${playerNumber}`;
+					// Update the IDs of the inputs according to the selected player
+					inputs.forEach((input, index) => {
+						input.id = `h${index + 1}_player${playerNumber}`;
+					});
 
-          // Fetch scores only when the modal is being opened
-          fetchScoresForPlayer(playerNumber, inputs);
+					// Update the title of the modal to reflect the selected player
+					let title = modal.querySelector(".col-12.text-center");
+					title.textContent = `Player ${playerNumber}`;
 
-          // Show the modal
-          modal.style.display = "block";
-        } else {
-          // Hide the modal
-          modal.style.display = "none";
-        }
-      };
-      window.handleModal = handleModal;
+					// Fetch scores only when the modal is being opened
+					fetchScoresForPlayer(playerNumber, inputs);
 
-      let storeScores = () => {
-        if (selectedPlayerNumber !== null) {
-          collectScores(selectedPlayerNumber);
-        } else {
-          console.error("Player number not set.");
-        }
-      };
-      window.storeScores = storeScores;
-    </script>
+					// Show the modal
+					modal.style.display = "block";
+				} else {
+					// Hide the modal
+					modal.style.display = "none";
+				}
+			};
+			window.handleModal = handleModal;
 
-    <script>
-      let goBack = () => {
-        window.location.href = "tournamentManagment.html";
-      };
-    </script>
+			let storeScores = () => {
+				if (selectedPlayerNumber !== null) {
+					collectScores(selectedPlayerNumber);
+				} else {
+					console.error("Player number not set.");
+				}
+			};
+			window.storeScores = storeScores;
+		</script>
 
-    <script>
-      function handleModal(id, playerNumber) {
-        window.handleModal(id, playerNumber);
-      }
-      function storeScores() {
-        window.storeScores();
-      }
-    </script>
+		<script>
+			let goBack = () => {
+				window.location.href = "tournamentManagment.html";
+			};
+		</script>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
+		<script>
+			function handleModal(id, playerNumber) {
+				window.handleModal(id, playerNumber);
+			}
+			function storeScores() {
+				window.storeScores();
+			}
+		</script>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-      crossorigin="anonymous"
-    ></script>
-    <script type="module" src="tournamentManagment.js"></script>
-    <script type="module" src="processScores.js"></script>
-  </body>
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+			crossorigin="anonymous"
+		></script>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+			crossorigin="anonymous"
+		></script>
+		<script type="module" src="tournamentManagment.js"></script>
+		<script type="module" src="processScores.js"></script>
+	</body>
 </html>
